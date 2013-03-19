@@ -26,7 +26,7 @@ double scale(double value, double omin, double omax, double nmin, double nmax)
 	return x * (nmax - nmin) + nmin;
 }
 
-void plotPoint(WINDOW *win, viewwin *view, double x, double y, char ch)
+void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch)
 {
 	int xm, ym; getmaxyx(win, ym, xm);
 	int xp = scale(x, view->xmin, view->xmax, 0, xm);
@@ -35,7 +35,7 @@ void plotPoint(WINDOW *win, viewwin *view, double x, double y, char ch)
 	//mvprintw(yp+1, xp+1, "[%c](%.2f, %.2f)", ch, x, y);
 }
 
-void drawAxes(WINDOW *win, viewwin *view)
+void drawAxes(WINDOW *win, const viewwin *view)
 {
 	int xm, ym; getmaxyx(win, ym, xm);
 	double x0 = scale(0, view->xmin, view->xmax, 0, xm);
@@ -59,7 +59,7 @@ void drawAxes(WINDOW *win, viewwin *view)
 	mvwaddch(win, y0, x0, '+');
 }
 
-void drawGraph(WINDOW *win, viewwin *view, yfunction yfunc)
+void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc)
 {
 	int xm, ym; getmaxyx(win, ym, xm);
 	double step = (view->xmax - view->xmin) / (xm + 1);
@@ -86,6 +86,16 @@ void handleKey(int key, viewwin *view)
 	
 	view->xmin += xshift; view->xmax += xshift;
 	view->ymin += yshift; view->ymax += yshift;
+
+	if (key == '-') {
+		view->xmin *= 1.5; view->xmax *= 1.5;
+		view->ymin *= 1.5; view->ymax *= 1.5;
+	}
+
+	if (key == '=') {
+		view->xmin /= 1.5; view->xmax /= 1.5;
+		view->ymin /= 1.5; view->ymax /= 1.5;
+	}
 }
 
 int main(int argc, char *argv[])
