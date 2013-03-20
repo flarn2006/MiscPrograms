@@ -1,5 +1,15 @@
+// Created by flarn2006 <flarn2006@gmail.com>
+// Compile with libmatheval (http://www.gnu.org/software/libmatheval/)
+// Also requires ncurses (Google it.)
+// To compile without libmatheval, use -DNOLIBMATHEVAL.
+// (Edit defaultFunction to change which function to graph then.)
+
 #include <curses.h>
+#include <string.h>
 #include <math.h>
+#ifndef NOLIBMATHEVAL
+#include <matheval.h>
+#endif
 
 #define XMIN -2*M_PI
 #define XMAX 2*M_PI
@@ -18,7 +28,14 @@ struct _viewwin {
 
 typedef struct _viewwin viewwin;
 
-double equation(double x) { return sin(x); }
+#ifndef NOLIBMATHEVAL
+void *eval = NULL;
+#endif
+
+double defaultFunction(double x)
+{
+	return sin(x);
+}
 
 double scale(double value, double omin, double omax, double nmin, double nmax)
 {
@@ -70,6 +87,13 @@ void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc)
 	}
 }
 
+#ifndef NOLIBMATHEVAL
+double performEval(double x)
+{
+	return evaluator_evaluate_x(eval, x);
+}
+#endif
+
 void handleKey(int key, viewwin *view)
 {
 	double xshift = 0, yshift = 0;
@@ -102,6 +126,7 @@ int main(int argc, char *argv[])
 {
 	viewwin view;
 	int key = 0;
+	yfunction yfunc = sin;
 
 	view.xmin = XMIN;
 	view.xmax = XMAX;
@@ -109,6 +134,20 @@ int main(int argc, char *argv[])
 	view.ymax = YMAX;
 	view.xscl = XSCL;
 	view.yscl = YSCL;
+
+	#ifndef NOLIBMATHEVAL
+	if (argc > 1) {
+		if (strncmp(argv[1], "y=", 2) == 0) argv[1] += 2;
+		eval = evaluator_create(argv[1]);
+		
+		if (!eval) {
+			fprintf(stderr, "Error in expression!\n");
+			return 1;
+		}
+		
+		yfunc = performEval;
+	}
+	#endif
 
 	initscr();
 	cbreak();
@@ -124,11 +163,16 @@ int main(int argc, char *argv[])
 		drawAxes(stdscr, &view);
 		attroff(COLOR_PAIR(1));
 	
-		drawGraph(stdscr, &view, equation);
+		drawGraph(stdscr, &view, yfunc);
 		refresh();
 		key = getch(); handleKey(key, &view);
 	}
 
 	endwin();
+
+	#ifndef NOLIBMATHEVAL
+	if (eval) evaluator_destroy(eval);
+	#endif
+
 	return 0;
 }
