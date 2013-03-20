@@ -32,9 +32,18 @@ typedef struct _viewwin viewwin;
 void *eval = NULL;
 #endif
 
+int enableSlopeChars = 1;
+
 double defaultFunction(double x)
 {
 	return sin(x);
+}
+
+double estimateSlope(yfunction func, double x, double accuracy)
+{
+	double y1 = func(x - accuracy);
+	double y2 = func(x + accuracy);
+	return (y2 - y1) / (2 * accuracy);
 }
 
 double scale(double value, double omin, double omax, double nmin, double nmax)
@@ -50,6 +59,14 @@ void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch)
 	int yp = scale(y, view->ymin, view->ymax, ym, 0);
 	mvwaddch(win, yp, xp, ch);
 	//mvprintw(yp+1, xp+1, "[%c](%.2f, %.2f)", ch, x, y);
+}
+
+char slopeChar(double slope)
+{
+	double a = fabs(slope);
+	if (a < 0.5)        return '=';
+	else if (a < 1.5)   return slope>0 ? '/' : '\\';
+	else                return '|';
 }
 
 void drawAxes(WINDOW *win, const viewwin *view)
@@ -76,14 +93,15 @@ void drawAxes(WINDOW *win, const viewwin *view)
 	mvwaddch(win, y0, x0, '+');
 }
 
-void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc)
+void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlopeChars)
 {
 	int xm, ym; getmaxyx(win, ym, xm);
 	double step = (view->xmax - view->xmin) / (xm + 1);
 	double x; for (x = view->xmin; x <= view->xmax; x += step)
 	{
 		double y = yfunc(x);
-		plotPoint(win, view, x, y, '#');
+		double d = estimateSlope(yfunc, x, step/2);
+		plotPoint(win, view, x, y, enableSlopeChars ? slopeChar(d):'#');
 	}
 }
 
@@ -120,6 +138,8 @@ void handleKey(int key, viewwin *view)
 		view->xmin /= 1.5; view->xmax /= 1.5;
 		view->ymin /= 1.5; view->ymax /= 1.5;
 	}
+
+	if (key == 's') enableSlopeChars = !enableSlopeChars;
 }
 
 int main(int argc, char *argv[])
@@ -153,6 +173,7 @@ int main(int argc, char *argv[])
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
+	curs_set(0);
 	start_color();
 	init_pair(1, COLOR_GREEN, COLOR_BLACK);
 
@@ -163,7 +184,7 @@ int main(int argc, char *argv[])
 		drawAxes(stdscr, &view);
 		attroff(COLOR_PAIR(1));
 	
-		drawGraph(stdscr, &view, yfunc);
+		drawGraph(stdscr, &view, yfunc, enableSlopeChars);
 		refresh();
 		key = getch(); handleKey(key, &view);
 	}
