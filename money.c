@@ -18,8 +18,19 @@ int main(int argc, char *argv[])
 	
 	double original, amount;
 
-	printf("Enter an amount of money: $");
-	scanf("%lf", &amount);
+	if (argc >= 2) {
+		const char *str = argv[1];
+		if (*str == '$') str++;
+		sscanf(str, "%lf", &amount);
+	} else {
+		printf("Enter an amount of money: $");
+		scanf("%lf", &amount);
+	}
+
+	if (amount < 0.01) {
+		printf("Invalid amount!\n");
+		return 1;
+	}
 	original = amount;
 
 	bills100 = numberOfUnits(&amount, 100.00);
