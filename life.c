@@ -5,8 +5,8 @@
 #include <time.h>
 
 #define BV(x,y) ((field[x][y] == '#' || field[x][y] == 'X') ? 1:0);
-#define WIDTH 30
-#define HEIGHT 20
+#define WIDTH 40
+#define HEIGHT 23
 
 char field[WIDTH][HEIGHT];
 
@@ -97,7 +97,7 @@ int main(int argc, const char *argv[])
 	for (;;)
 	{
 		clear();
-		mvprintw(22, 0, "Generation: %d", gen);
+		mvprintw(23, 0, "Generation: %d", gen);
 		for (y=0; y<HEIGHT; y++)
 			for (x=0; x<WIDTH; x++)
 			{
