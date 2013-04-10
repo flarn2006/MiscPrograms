@@ -1,7 +1,7 @@
 // playnotes.c - Plays a string of notes given on the command line.
 // Created by flarn2006 - http://flarn2006.blogspot.com/
 // Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported
-// Requires libao (http://xiph.org/ao/) - Compile with "-lao"
+// Requires libao (http://xiph.org/ao/) - Compile with "-lao -lm"
 
 #include <stdio.h>
 #include <stdlib.h>
