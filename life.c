@@ -93,11 +93,15 @@ int main(int argc, const char *argv[])
 	}
 	
 	initscr(); cbreak(); noecho();
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
 			
 	for (;;)
 	{
-		clear();
+		erase();
+		attron(COLOR_PAIR(1) | A_BOLD);
 		mvprintw(23, 0, "Generation: %d", gen);
+		attroff(COLOR_PAIR(1) | A_BOLD);
 		for (y=0; y<HEIGHT; y++)
 			for (x=0; x<WIDTH; x++)
 			{
