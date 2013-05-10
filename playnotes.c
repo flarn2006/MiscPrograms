@@ -1,7 +1,7 @@
 // playnotes.c - Plays a string of notes given on the command line.
 // Created by flarn2006 - http://flarn2006.blogspot.com/
 // Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported
-// Requires libao (http://xiph.org/ao/) - Compile with "-lao -lm"
+// Requires libao (http://xiph.org/ao/) - Compile with "-lao"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("Usage: %s notes [length]\n", argv[0]);
-		return 2;
+		return 3;
 	}
 	
 	fmt.bits = 16;
@@ -63,6 +63,10 @@ int main(int argc, char *argv[])
 	ao_initialize();
 	
 	device = ao_open_live(ao_default_driver_id(), &fmt, NULL);
+	if (!device) {
+		printf("Error %d opening audio device!\n", errno);
+		return 2;
+	}
 	
 	int i; for (i=0; i<strlen(argv[1]); i++)
 	{
