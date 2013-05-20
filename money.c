@@ -17,6 +17,11 @@ int main(int argc, char *argv[])
 	int quarters = 0, dimes = 0, nickels = 0, pennies = 0;
 	
 	double original, amount;
+	
+	puts("NOTE: I'm aware this program doesn't always give accurate results.");
+	puts("I haven't gotten around to fixing it, but if you can, feel free to");
+	puts("make a pull request.");
+	puts("");
 
 	if (argc >= 2) {
 		const char *str = argv[1];
