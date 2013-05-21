@@ -1,18 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Sample:
-Enter voltage: 36
-How many resistors? 3
-R1 = 6
-R2 = 5
-R3 = 12
-
-        V       I       R
-R1      9.391   1.565   6.000
-R2      7.826   1.565   5.000
-R3      18.783  1.565   12.000 */
-
 double array_sum(double* array, int count);
 
 int main(int argc, char *argv[])
