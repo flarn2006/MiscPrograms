@@ -34,7 +34,7 @@ int main()
 	{
 		for (j=0; j<NUM_CELLS; j++)
 		{
-			printf("%c", cells[j] ? char_ON:char_OFF);
+			putchar(cells[j] ? char_ON:char_OFF);
 		}
 		printf("\n");
 		do_generation(cells, NUM_CELLS);
