@@ -27,7 +27,7 @@ int neighbors(int x, int y)
 int loadWorld(const char *filename, char field[][HEIGHT], const char *argv0)
 {
 	int y;
-	FILE *fp = fopen(filename, "r");
+	FILE *fp = strcmp(filename, "-") ? fopen(filename, "r") : stdin;
 	if (!fp)
 	{
 		perror(argv0);
@@ -53,6 +53,7 @@ int loadWorld(const char *filename, char field[][HEIGHT], const char *argv0)
 			else
 			{
 				fprintf(stderr, "Unknown character '%c' found.\n", ch);
+				fprintf(stderr, "Acceptable characters are '#' and ' '.\n");
 				return 1;
 			}
 		}
@@ -87,7 +88,7 @@ int main(int argc, const char *argv[])
 			break;
 			
 		default:
-			printf("Usage: %s [filename]\n", argv[0]);
+			printf("Usage: %s [filename | -]\n", argv[0]);
 			return 3;
 			break;
 	}
