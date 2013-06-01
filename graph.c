@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 {
 	viewwin view;
 	int key = 0;
-	yfunction yfunc = sin;
+	yfunction yfunc = defaultFunction;
 
 	view.xmin = XMIN;
 	view.xmax = XMAX;
