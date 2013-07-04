@@ -1,3 +1,7 @@
+// addletters.c - This program adds up the letters and digits in strings. Letters are counted by
+// their position in the alphabet, and digits are counted by their values as individual digits.
+// DISCLAIMER: Any particular string adding up to 666 is not an indication of Satanic affiliation!
+
 #include <stdio.h>
 
 int value(char ch)
