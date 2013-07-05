@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 	view.xscl = XSCL;
 	view.yscl = YSCL;
 
-	#ifndef NOLIBMATHEVAL
+#ifndef NOLIBMATHEVAL
 	if (argc > 1) {
 		if (strncmp(argv[1], "y=", 2) == 0) argv[1] += 2;
 		eval = evaluator_create(argv[1]);
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 		
 		yfunc = performEval;
 	}
-	#endif
+#endif
 
 	initscr();
 	cbreak();
@@ -191,9 +191,9 @@ int main(int argc, char *argv[])
 
 	endwin();
 
-	#ifndef NOLIBMATHEVAL
+#ifndef NOLIBMATHEVAL
 	if (eval) evaluator_destroy(eval);
-	#endif
+#endif
 
 	return 0;
 }
