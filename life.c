@@ -59,7 +59,7 @@ int loadWorld(const char *filename, char field[][HEIGHT], const char *argv0)
 		}
 	}
 	
-	fclose(fp);
+	if (fp != stdin) fclose(fp);
 	
 	return 0;
 }
