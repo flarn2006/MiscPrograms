@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	ao_device *device;
 	ao_sample_format fmt;
 	double duration = NOTE_LENGTH;
-	double octave_mult = 1.0;
+	float octave_mult = 1.0f;
 
 	if (argc == 2);  // do nothing
 	else if (argc == 3)
@@ -71,11 +71,17 @@ int main(int argc, char *argv[])
 	int i; for (i=0; i<strlen(argv[1]); i++)
 	{
 		char ch = argv[1][i];
+		char capital;
 		switch (ch)
 		{
-			case '-': octave_mult *= 0.5; break;
-			case '+': octave_mult *= 2.0; break;
-			default: play_note(device, tofreq(ch) * octave_mult, duration);
+			case '-': octave_mult *= 0.5f; break;
+			case '+': octave_mult *= 2.0f; break;
+			default:
+				capital = ('A' <= ch && ch <= 'G');
+				if (capital) octave_mult *= 2.0f;
+				play_note(device, tofreq(ch) * octave_mult, duration);
+				if (capital) octave_mult *= 0.5f;
+				break; //not needed, but good practice
 		}
 	}
 	
