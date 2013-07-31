@@ -6,4 +6,4 @@ all: addletters consine
 addletters:
 	$(CC) $(CFLAGS) addletters.c -o addletters
 consine:
-	$(CC) $(CFLAGS) consine.c -lncurses -o consine
+	$(CC) $(CFLAGS) consine.c -lncurses -lm -o consine
