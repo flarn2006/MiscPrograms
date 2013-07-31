@@ -1,10 +1,10 @@
 CC="/usr/bin/gcc"
-CFLAGS=-O3 -Wall
+CFLAGS=-O3
 TARGETS=addletters consine expand graph life money playnotes polyline rainbow rule90 runlength series
 
 all: $(TARGETS)
 clean:
-	rm $(TARGETS)
+	rm -f $(TARGETS)
 
 addletters: addletters.c
 	$(CC) $(CFLAGS) addletters.c -o addletters
