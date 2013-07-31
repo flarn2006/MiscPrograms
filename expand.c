@@ -13,6 +13,7 @@ xarray new_array(int first)
 	xarray ar = malloc(sizeof(struct array_entry));
 	ar->value = first;
 	ar->next = NULL;
+	return ar;
 }
 
 int sum_array(xarray ar)
