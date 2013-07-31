@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 	initscr();
 	cbreak();
 	noecho();
+	curs_set(0);
 	srand((unsigned)time(NULL));
 
 	getmaxyx(stdscr, ymax, xmax);
@@ -43,12 +44,12 @@ int main(int argc, char *argv[])
 	clear();
 
 	start_color();
-	for (i=0; i<7; i++) {
-		init_pair(i, i+1, 0);
+	for (i=1; i<=7; i++) {
+		init_pair(i, i, 0);
 	}
 
 	while (1) {
-		dropchar(rand() % 96 + 33, rand() % (xmax + 1), rand() % 7, heights);
+		dropchar(rand()%94+33, rand() % (xmax + 1), rand()%7+1, heights);
 	}
 
 	return 0;
