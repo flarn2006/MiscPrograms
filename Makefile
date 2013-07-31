@@ -1,6 +1,6 @@
 CC="/usr/bin/gcc"
 CFLAGS=-O3
-TARGETS=addletters consine expand graph life money playnotes polyline rainbow rule90 runlength series
+TARGETS=addletters charsnow consine expand graph life money playnotes polyline rainbow rule90 runlength series
 
 all: $(TARGETS)
 clean:
@@ -8,6 +8,8 @@ clean:
 
 addletters: addletters.c
 	$(CC) $(CFLAGS) addletters.c -o addletters
+charsnow: charsnow.c delayms.h
+	$(CC) $(CFLAGS) charsnow.c -lncurses -o charsnow
 consine: consine.c
 	$(CC) $(CFLAGS) consine.c -lncurses -lm -o consine
 expand: expand.c
