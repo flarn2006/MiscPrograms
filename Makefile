@@ -1,6 +1,7 @@
 CC="/usr/bin/gcc"
+CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters charsnow consine expand graph life money playnotes polyline rainbow rule90 runlength series
+TARGETS=addletters charsnow consine expand graph life money particles playnotes polyline rainbow rule90 runlength series
 
 all: $(TARGETS)
 clean:
@@ -20,6 +21,8 @@ life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
 money: money.c
 	$(CC) $(CFLAGS) money.c -o money
+particles: particles.cpp delayms.h
+	$(CPP) $(CFLAGS) particles.cpp -lncurses -o particles
 playnotes: playnotes.c
 	$(CC) $(CFLAGS) playnotes.c -lao -lm -o playnotes
 polyline: polyline.c
