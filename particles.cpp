@@ -52,6 +52,11 @@ int main(int argc, char *argv[])
 	init_pair(2, 3, 0); //yellow
 	init_pair(3, 1, 0); //red
 
+	erase();
+	printw("Press Ctrl+C to stop...");
+	refresh();
+	delayms(1000);
+	
 	while (1) {
 		erase();
 
