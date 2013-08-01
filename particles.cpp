@@ -116,5 +116,6 @@ int main(int argc, char *argv[])
 	}
 
 	endwin();
+	delete psys;
 	return 0;
 }
