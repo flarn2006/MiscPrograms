@@ -6,6 +6,7 @@
 
 #define TIME_STEP 0.01f
 #define MAX_PARTICLES 256
+#define VEL_INCREMENT 0.5f
 
 class Particle
 {
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
 {
 	int xmax, ymax;
 	float originX, originY;
+	float velocity = 10.0f;
 	std::vector<Particle> *psys = new std::vector<Particle>();
 	
 	initscr();
@@ -91,7 +93,7 @@ int main(int argc, char *argv[])
 			attroff(COLOR_PAIR(pair));
 		}
 
-		Particle p(originX, originY, 10.0f);
+		Particle p(originX, originY, velocity);
 		psys->insert(psys->begin(), p);
 
 		if (psys->size() > MAX_PARTICLES) {
@@ -100,6 +102,7 @@ int main(int argc, char *argv[])
 
 		attron(A_BOLD); attron(COLOR_PAIR(4));
 		mvprintw((int)originY, (int)originX * 2, "<>");
+		mvprintw(0, 0, "[+/-] Velocity: %.2f", velocity);
 		attroff(A_BOLD); attroff(COLOR_PAIR(4));
 
 		refresh();
@@ -110,6 +113,9 @@ int main(int argc, char *argv[])
 			case KEY_DOWN:  originY++; break;
 			case KEY_LEFT:  originX--; break;
 			case KEY_RIGHT: originX++; break;
+
+			case '+': velocity += VEL_INCREMENT; break;
+			case '-': velocity -= VEL_INCREMENT; break;
 			
 			case 'q': quitNow = 1; break;
 		}
