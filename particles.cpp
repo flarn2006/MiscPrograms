@@ -41,24 +41,35 @@ class Particle
 
 int main(int argc, char *argv[])
 {
+	int xmax, ymax;
+	float originX, originY;
 	std::vector<Particle> *psys = new std::vector<Particle>();
 	
 	initscr();
 	cbreak();
 	noecho();
+	keypad(stdscr, TRUE);
 	curs_set(0);
+	nodelay(stdscr, TRUE);
+	getmaxyx(stdscr, ymax, xmax);
+
+	originX = (float)(xmax+1) / 4.0f;
+	originY = (float)(ymax+1) / 2.0f;
 
 	start_color();
 	init_pair(1, 2, 0); //green
 	init_pair(2, 3, 0); //yellow
 	init_pair(3, 1, 0); //red
+	init_pair(4, 6, 0); //cyan
 
 	erase();
-	printw("Press Ctrl+C to stop...");
+	printw("Use the arrow keys to move, and press 'q' to stop...");
 	refresh();
 	delayms(1000);
+
+	int quitNow = 0;
 	
-	while (1) {
+	while (!quitNow) {
 		erase();
 
 		std::vector<Particle>::iterator i;
@@ -80,15 +91,28 @@ int main(int argc, char *argv[])
 			attroff(COLOR_PAIR(pair));
 		}
 
-		Particle p(20.0f, 12.5f, 10.0f);
+		Particle p(originX, originY, 10.0f);
 		psys->insert(psys->begin(), p);
 
 		if (psys->size() > MAX_PARTICLES) {
 			psys->pop_back();
 		}
 
+		attron(A_BOLD); attron(COLOR_PAIR(4));
+		mvprintw((int)originY, (int)originX * 2, "<>");
+		attroff(A_BOLD); attroff(COLOR_PAIR(4));
+
 		refresh();
 		delayms(1000 * TIME_STEP);
+
+		switch (getch()) {
+			case KEY_UP:    originY--; break;
+			case KEY_DOWN:  originY++; break;
+			case KEY_LEFT:  originX--; break;
+			case KEY_RIGHT: originX++; break;
+			
+			case 'q': quitNow = 1; break;
+		}
 	}
 
 	endwin();
