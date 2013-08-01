@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 	int xmax, ymax;
 	float originX, originY;
 	float velocity = 10.0f;
+	int displayOn = 1;
 	std::vector<Particle> *psys = new std::vector<Particle>();
 	
 	initscr();
@@ -100,10 +101,12 @@ int main(int argc, char *argv[])
 			psys->pop_back();
 		}
 
-		attron(A_BOLD); attron(COLOR_PAIR(4));
-		mvprintw((int)originY, (int)originX * 2, "<>");
-		mvprintw(0, 0, "[+/-] Velocity: %.2f", velocity);
-		attroff(A_BOLD); attroff(COLOR_PAIR(4));
+		if (displayOn) {
+			attron(A_BOLD); attron(COLOR_PAIR(4));
+			mvprintw((int)originY, (int)originX * 2, "<>");
+			mvprintw(0, 0, "[+/-] Max Velocity: %.1f", velocity);
+			attroff(A_BOLD); attroff(COLOR_PAIR(4));
+		}
 
 		refresh();
 		delayms(1000 * TIME_STEP);
@@ -114,9 +117,10 @@ int main(int argc, char *argv[])
 			case KEY_LEFT:  originX--; break;
 			case KEY_RIGHT: originX++; break;
 
-			case '+': velocity += VEL_INCREMENT; break;
+			case '+': case '=': velocity += VEL_INCREMENT; break;
 			case '-': velocity -= VEL_INCREMENT; break;
 			
+			case 'd': displayOn = !displayOn; break;
 			case 'q': quitNow = 1; break;
 		}
 	}
