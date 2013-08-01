@@ -1,7 +1,7 @@
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 #include <curses.h>
-#include <stdlib.h>
-#include <time.h>
 #include "delayms.h"
 
 #define TIME_STEP 0.01f
