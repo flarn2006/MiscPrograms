@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 	initscr();
 	cbreak();
 	noecho();
+	curs_set(0);
 
 	start_color();
 	init_pair(1, 2, 0); //green
