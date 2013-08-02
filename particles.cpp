@@ -7,11 +7,13 @@
 #define TIME_STEP 0.01f
 #define MAX_PARTICLES 256
 #define VEL_INCREMENT 0.5f
+#define ACCEL_INCREMENT 2.0f
 
 class Particle
 {
 	private:
 		float vx, vy;
+		float ax, ay;
 		float age;
 
 	public:
@@ -25,12 +27,18 @@ class Particle
 			vx = (float)rand() / (0.5f*RAND_MAX) - 1.0f;
 			vy = (float)rand() / (0.5f*RAND_MAX) - 1.0f;
 			vx *= maxSpeed; vy *= maxSpeed;
+
+			ax = ay = 0.0f;
 		}
 
 		void simulate(float time)
 		{
 			x += vx * time;
 			y += vy * time;
+
+			vx += ax * time;
+			vy += ay * time;
+
 			age += time;
 		}
 
@@ -38,14 +46,24 @@ class Particle
 		{
 			return age;
 		}
+
+		void setAccel(float accelX, float accelY)
+		{
+			ax = accelX;
+			ay = accelY;
+		}
 };
 
 int main(int argc, char *argv[])
 {
 	int xmax, ymax;
 	float originX, originY;
+	
 	float velocity = 10.0f;
+	float accelX = 0.0f;
+	float accelY = 0.0f;
 	int displayOn = 1;
+	
 	std::vector<Particle> *psys = new std::vector<Particle>();
 	
 	initscr();
@@ -92,6 +110,8 @@ int main(int argc, char *argv[])
 			attron(COLOR_PAIR(pair));
 			mvprintw((int)i->y, (int)i->x * 2, "()");
 			attroff(COLOR_PAIR(pair));
+
+			i->setAccel(accelX, accelY);
 		}
 
 		Particle p(originX, originY, velocity);
@@ -104,7 +124,9 @@ int main(int argc, char *argv[])
 		if (displayOn) {
 			attron(A_BOLD); attron(COLOR_PAIR(4));
 			mvprintw((int)originY, (int)originX * 2, "<>");
-			mvprintw(0, 0, "[+/-] Max Velocity: %.1f", velocity);
+			mvprintw(0, 0, "[-/+] Max Velocity:   %.1f", velocity);
+			mvprintw(1, 0, "[A/D] X Acceleration: %.0f", accelX);
+			mvprintw(2, 0, "[W/S] Y Acceleration: %.0f", accelY);
 			attroff(A_BOLD); attroff(COLOR_PAIR(4));
 		}
 
@@ -119,8 +141,13 @@ int main(int argc, char *argv[])
 
 			case '+': case '=': velocity += VEL_INCREMENT; break;
 			case '-': velocity -= VEL_INCREMENT; break;
+
+			case 'a': accelX -= ACCEL_INCREMENT; break;
+			case 'd': accelX += ACCEL_INCREMENT; break;
+			case 'w': accelY -= ACCEL_INCREMENT; break;
+			case 's': accelY += ACCEL_INCREMENT; break;
 			
-			case 'd': displayOn = !displayOn; break;
+			case '`': displayOn = !displayOn; break;
 			case 'q': quitNow = 1; break;
 		}
 	}
