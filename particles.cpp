@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
 
 		std::vector<Particle>::iterator i;
 		for (i=psys->begin(); i!=psys->end(); i++) {
-			(*i).simulate(TIME_STEP);
-			float age = (*i).getAge();
+			i->simulate(TIME_STEP);
+			float age = i->getAge();
 			int pair;
 			
 			if (age < 0.75f) {
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 			}
 
 			attron(COLOR_PAIR(pair));
-			mvprintw((int)(*i).y, (int)(*i).x * 2, "()");
+			mvprintw((int)i->y, (int)i->x * 2, "()");
 			attroff(COLOR_PAIR(pair));
 		}
 
