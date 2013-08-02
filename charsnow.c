@@ -49,7 +49,13 @@ int main(int argc, char *argv[])
 	}
 
 	while (1) {
-		dropchar(rand()%94+33, rand() % (xmax + 1), rand()%7+1, heights);
+		char ch = rand() % 94 + 33;
+		int x = rand() % (xmax + 1);
+		int color = rand() % 7 + 1;
+		
+		if (rand() & 1) attron(A_BOLD);
+		dropchar(ch, x, color, heights);
+		attroff(A_BOLD); //if it wasn't set to begin with nothing will happen
 	}
 
 	return 0;
