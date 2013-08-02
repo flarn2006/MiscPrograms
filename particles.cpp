@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
-	curs_set(0);
 	nodelay(stdscr, TRUE);
 	getmaxyx(stdscr, ymax, xmax);
 
@@ -70,8 +69,9 @@ int main(int argc, char *argv[])
 	refresh();
 	delayms(1000);
 
+	curs_set(0);
+
 	int quitNow = 0;
-	
 	while (!quitNow) {
 		erase();
 
