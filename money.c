@@ -1,9 +1,16 @@
 #include <stdio.h>
 
+int isOverOrCloseEnough(double a, double b)
+{
+	// Workaround for floating point error
+	double tolerance = 0.001;
+	return (a >= b-tolerance);
+}
+
 int numberOfUnits(double *curAmt, double value)
 {
 	int count = 0;
-	while (*curAmt >= value) {
+	while (isOverOrCloseEnough(*curAmt, value)) {
 		*curAmt -= value;
 		count++;
 	}
@@ -18,11 +25,6 @@ int main(int argc, char *argv[])
 	
 	double original, amount;
 	
-	puts("NOTE: I'm aware this program doesn't always give accurate results.");
-	puts("I haven't gotten around to fixing it, but if you can, feel free to");
-	puts("make a pull request.");
-	puts("");
-
 	if (argc >= 2) {
 		const char *str = argv[1];
 		if (*str == '$') str++;
