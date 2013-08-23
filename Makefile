@@ -1,7 +1,7 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters charsnow consine expand graph life money particles playnotes polyline rainbow rule90 runlength series
+TARGETS=addletters bounce charsnow consine expand graph life money particles playnotes polyline rainbow rule90 runlength series
 
 all: $(TARGETS)
 clean:
@@ -9,6 +9,8 @@ clean:
 
 addletters: addletters.c
 	$(CC) $(CFLAGS) addletters.c -o addletters
+bounce: bounce.c delayms.h
+	$(CC) $(CFLAGS) bounce.c -lncurses -o bounce
 charsnow: charsnow.c delayms.h
 	$(CC) $(CFLAGS) charsnow.c -lncurses -o charsnow
 consine: consine.c
