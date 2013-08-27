@@ -1,7 +1,7 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters bounce charsnow consine countpi expand graph life money particles playnotes polyline rainbow rule90 runlength series
+TARGETS=addletters bounce charsnow consine countpi expand graph life money particles playnotes polyline rainbow rule90 runlength series stats
 
 all: $(TARGETS)
 clean:
@@ -39,3 +39,5 @@ runlength: runlength.c
 	$(CC) $(CFLAGS) runlength.c -o runlength
 series: series.c
 	$(CC) $(CFLAGS) series.c -o series
+stats: stats.c
+	$(CC) $(CFLAGS) stats.c -o stats
