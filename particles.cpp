@@ -1,3 +1,6 @@
+// IMPORTANT! If you don't have delayms.h, get it from here:
+// https://github.com/flarn2006/MiscPrograms/blob/master/delayms.h
+
 #include <vector>
 #include <cstdlib>
 #include <ctime>
