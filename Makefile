@@ -1,11 +1,13 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters bounce charsnow consine countpi expand graph life money particles playnotes polyline rainbow rule90 runlength series stats
+TARGETS=addletters bounce charsnow consine countpi expand graph life money particles polyline rainbow rule90 runlength series stats
+TARGETS_LIBAO=playnotes
 
-all: $(TARGETS)
+all: $(TARGETS) $(TARGETS_LIBAO)
+nolibao: $(TARGETS)
 clean:
-	rm -f $(TARGETS)
+	rm -f $(TARGETS) $(TARGETS_LIBAO)
 
 addletters: addletters.c
 	$(CC) $(CFLAGS) addletters.c -o addletters
