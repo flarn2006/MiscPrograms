@@ -26,7 +26,7 @@ graph: graph.c
 life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
 money: money.c
-	$(CC) $(CFLAGS) money.c -o money
+	$(CC) $(CFLAGS) money.c -lm -o money
 particles: particles.cpp delayms.h
 	$(CPP) $(CFLAGS) particles.cpp -lncurses -o particles
 playnotes: playnotes.c

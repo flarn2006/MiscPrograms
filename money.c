@@ -1,16 +1,26 @@
 #include <stdio.h>
+#include <math.h>
 
-int isOverOrCloseEnough(double a, double b)
+void printAmount(long value)
 {
-	// Workaround for floating point error
-	double tolerance = 0.001;
-	return (a >= b-tolerance);
+	long a = value / 100L;
+	int b = (int)value % 100;
+	printf("$%ld.%02d", a, b);
 }
 
-int numberOfUnits(double *curAmt, double value)
+void printUnit(long qty, const char *desc, long value)
 {
-	int count = 0;
-	while (isOverOrCloseEnough(*curAmt, value)) {
+	if (qty > 0) {
+		printf("%ld %s\t= ", qty, desc);
+		printAmount(qty * value);
+		printf("\n");
+	}
+}
+
+long numberOfUnits(long *curAmt, long value)
+{
+	long count = 0L;
+	while (*curAmt >= value) {
 		*curAmt -= value;
 		count++;
 	}
@@ -19,51 +29,55 @@ int numberOfUnits(double *curAmt, double value)
 
 int main(int argc, char *argv[])
 {
-	int bills100 = 0, bills50 = 0, bills20 = 0;
-	int bills10 = 0, bills5 = 0, bills1 = 0;
-	int quarters = 0, dimes = 0, nickels = 0, pennies = 0;
+	long bills100 = 0L, bills50 = 0L, bills20 = 0L;
+	long bills10 = 0L, bills5 = 0L, bills1 = 0L;
+	long quarters = 0L, dimes = 0L, nickels = 0L, pennies = 0L;
 	
-	double original, amount;
-	
+	long original, amount;
+	double amount_f;
+
 	if (argc >= 2) {
 		const char *str = argv[1];
 		if (*str == '$') str++;
-		sscanf(str, "%lf", &amount);
+		sscanf(str, "%lf", &amount_f);
 	} else {
 		printf("Enter an amount of money: $");
-		scanf("%lf", &amount);
+		scanf("%lf", &amount_f);
 	}
 
-	if (amount < 0.01) {
+	amount = lround(amount_f * 100.0);
+
+	if (amount < 0L) {
 		printf("Invalid amount!\n");
 		return 1;
 	}
 	original = amount;
 
-	bills100 = numberOfUnits(&amount, 100.00);
-	bills50  = numberOfUnits(&amount,  50.00);
-	bills20  = numberOfUnits(&amount,  20.00);
-	bills10  = numberOfUnits(&amount,  10.00);
-	bills5   = numberOfUnits(&amount,   5.00);
-	bills1   = numberOfUnits(&amount,   1.00);
-	quarters = numberOfUnits(&amount,   0.25);
-	dimes    = numberOfUnits(&amount,   0.10);
-	nickels  = numberOfUnits(&amount,   0.05);
-	pennies  = (int)(amount * 100.00);
+	bills100 = numberOfUnits(&amount, 10000L);
+	bills50  = numberOfUnits(&amount,  5000L);
+	bills20  = numberOfUnits(&amount,  2000L);
+	bills10  = numberOfUnits(&amount,  1000L);
+	bills5   = numberOfUnits(&amount,   500L);
+	bills1   = numberOfUnits(&amount,   100L);
+	quarters = numberOfUnits(&amount,    25L);
+	dimes    = numberOfUnits(&amount,    10L);
+	nickels  = numberOfUnits(&amount,     5L);
+	pennies  = (int)amount;
 
 	printf("\n");
-	printf("$%.2lf is equal to:\n\n", original);
+	printAmount(original);
+	printf(" is equal to:\n\n");
 
-	if (bills100) printf("%d $100 bills\t= $%.2lf\n", bills100, bills100 * 100.00);
-	if (bills50)  printf("%d $50 bills\t= $%.2lf\n", bills50, bills50 * 50.00);
-	if (bills20)  printf("%d $20 bills\t= $%.2lf\n", bills20, bills20 * 20.00);
-	if (bills10)  printf("%d $10 bills\t= $%.2lf\n", bills10, bills10 * 10.00);
-	if (bills5)   printf("%d $5 bills\t= $%.2lf\n", bills5, bills5 * 5.00);
-	if (bills1)   printf("%d $1 bills\t= $%.2lf\n", bills1, (double)bills1);
-	if (quarters) printf("%d quarters\t= $%.2lf\n", quarters, quarters * 0.25);
-	if (dimes)    printf("%d dimes\t\t= $%.2lf\n", dimes, dimes * 0.10);
-	if (nickels)  printf("%d nickels\t= $%.2lf\n", nickels, nickels * 0.05);
-	if (pennies)  printf("%d pennies\t= $%.2lf\n", pennies, pennies * 0.01);
+	printUnit(bills100, "$100 bills", 10000L);
+	printUnit(bills50,  "$50 bills ", 5000L);
+	printUnit(bills20,  "$20 bills ", 2000L);
+	printUnit(bills10,  "$10 bills ", 1000L);
+	printUnit(bills5,   "$5 bills  ", 500L);
+	printUnit(bills1,   "$1 bills  ", 100L);
+	printUnit(quarters, "quarters  ", 25L);
+	printUnit(dimes,    "dimes     ", 10L);
+	printUnit(nickels,  "nickels   ", 5L);
+	printUnit(pennies,  "pennies   ", 1L);
 	
 	printf("\n");
 
