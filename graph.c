@@ -18,7 +18,10 @@
 #define XSCL 1
 #define YSCL 1
 
+typedef struct _viewwin viewwin;
+typedef struct _khdata khdata;
 typedef double (*yfunction)(double x);
+typedef void (*key_handler)(int key, khdata *data);
 
 struct _viewwin {
 	double xmin, xmax;
@@ -26,22 +29,21 @@ struct _viewwin {
 	double xscl, yscl;
 };
 
-typedef struct _viewwin viewwin;
-
 struct _khdata {
 	// Struct for pointers to data that key handlers may need to access
 	viewwin *view;
+	key_handler *keyHandler;
+	int *trace;
 };
-
-typedef struct _khdata khdata;
-
-typedef void (*key_handler)(int key, khdata *data);
 
 #ifndef NOLIBMATHEVAL
 void *eval = NULL;
 #endif
 
+void defaultKeyHandler(int key, khdata *data);
+
 int enableSlopeChars = 1;
+key_handler handleKey = defaultKeyHandler;
 
 double defaultFunction(double x)
 {
@@ -121,6 +123,24 @@ double performEval(double x)
 }
 #endif
 
+void traceKeyHandler(int key, khdata *data)
+{
+	int xm, ym; getmaxyx(stdscr, ym, xm);
+	
+	switch (key) {
+		case KEY_LEFT:  *data->trace--; break;
+		case KEY_RIGHT: *data->trace++; break;
+	}
+
+	if (*data->trace < 0) *data->trace = 0;
+	if (*data->trace > ym) *data->trace = ym;
+
+	if (key == 't') {
+		*data->trace = -1;
+		handleKey = defaultKeyHandler;
+	}
+}
+
 void defaultKeyHandler(int key, khdata *data)
 {
 	viewwin *view = data->view;
@@ -150,15 +170,27 @@ void defaultKeyHandler(int key, khdata *data)
 	}
 
 	if (key == 's') enableSlopeChars = !enableSlopeChars;
+
+	if (key == 't') {
+		handleKey = traceKeyHandler;
+		*data->trace = 10;
+	}
 }
 
-key_handler handleKey = defaultKeyHandler;
+void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, int trace)
+{
+	// TODO: Finish this!
+	attron(COLOR_PAIR(2));
+	plotPoint(win, view, (double)trace, yfunc((double)trace), 'X');
+	attroff(COLOR_PAIR(2));
+}
 
 int main(int argc, char *argv[])
 {
 	viewwin view;
 	khdata khd;
 	int key = 0;
+	int trace = -1;
 	yfunction yfunc = defaultFunction;
 
 	view.xmin = XMIN;
@@ -169,6 +201,7 @@ int main(int argc, char *argv[])
 	view.yscl = YSCL;
 
 	khd.view = &view;
+	khd.trace = &trace;
 
 #ifndef NOLIBMATHEVAL
 	if (argc > 1) {
@@ -191,6 +224,7 @@ int main(int argc, char *argv[])
 	curs_set(0);
 	start_color();
 	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 
 	while (key != (int)'q') {	
 		erase();
@@ -200,6 +234,7 @@ int main(int argc, char *argv[])
 		attroff(COLOR_PAIR(1));
 	
 		drawGraph(stdscr, &view, yfunc, enableSlopeChars);
+		if (trace > -1) drawTrace(stdscr, &view, yfunc, trace);
 		refresh();
 		key = getch(); handleKey(key, &khd);
 	}
