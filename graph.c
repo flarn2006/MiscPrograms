@@ -27,7 +27,15 @@ struct _viewwin {
 };
 
 typedef struct _viewwin viewwin;
-typedef void (*key_handler)(int key, viewwin *view);
+
+struct _khdata {
+	// Struct for pointers to data that key handlers may need to access
+	viewwin *view;
+};
+
+typedef struct _khdata khdata;
+
+typedef void (*key_handler)(int key, khdata *data);
 
 #ifndef NOLIBMATHEVAL
 void *eval = NULL;
@@ -113,8 +121,9 @@ double performEval(double x)
 }
 #endif
 
-void defaultKeyHandler(int key, viewwin *view)
+void defaultKeyHandler(int key, khdata *data)
 {
+	viewwin *view = data->view;
 	double xshift = 0, yshift = 0;
 	
 	switch (key) {
@@ -148,6 +157,7 @@ key_handler handleKey = defaultKeyHandler;
 int main(int argc, char *argv[])
 {
 	viewwin view;
+	khdata khd;
 	int key = 0;
 	yfunction yfunc = defaultFunction;
 
@@ -157,6 +167,8 @@ int main(int argc, char *argv[])
 	view.ymax = YMAX;
 	view.xscl = XSCL;
 	view.yscl = YSCL;
+
+	khd.view = &view;
 
 #ifndef NOLIBMATHEVAL
 	if (argc > 1) {
@@ -189,7 +201,7 @@ int main(int argc, char *argv[])
 	
 		drawGraph(stdscr, &view, yfunc, enableSlopeChars);
 		refresh();
-		key = getch(); handleKey(key, &view);
+		key = getch(); handleKey(key, &khd);
 	}
 
 	endwin();
