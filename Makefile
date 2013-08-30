@@ -42,4 +42,4 @@ runlength: runlength.c
 series: series.c
 	$(CC) $(CFLAGS) series.c -o series
 stats: stats.c
-	$(CC) $(CFLAGS) stats.c -o stats
+	$(CC) $(CFLAGS) stats.c -lm -o stats
