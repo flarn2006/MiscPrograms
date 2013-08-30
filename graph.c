@@ -143,12 +143,13 @@ void defaultKeyHandler(int key, viewwin *view)
 	if (key == 's') enableSlopeChars = !enableSlopeChars;
 }
 
+key_handler handleKey = defaultKeyHandler;
+
 int main(int argc, char *argv[])
 {
 	viewwin view;
 	int key = 0;
 	yfunction yfunc = defaultFunction;
-	key_handler handleKey = defaultKeyHandler;
 
 	view.xmin = XMIN;
 	view.xmax = XMAX;
