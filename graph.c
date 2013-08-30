@@ -27,6 +27,7 @@ struct _viewwin {
 };
 
 typedef struct _viewwin viewwin;
+typedef void (*key_handler)(int key, viewwin *view);
 
 #ifndef NOLIBMATHEVAL
 void *eval = NULL;
@@ -112,7 +113,7 @@ double performEval(double x)
 }
 #endif
 
-void handleKey(int key, viewwin *view)
+void defaultKeyHandler(int key, viewwin *view)
 {
 	double xshift = 0, yshift = 0;
 	
@@ -147,6 +148,7 @@ int main(int argc, char *argv[])
 	viewwin view;
 	int key = 0;
 	yfunction yfunc = defaultFunction;
+	key_handler handleKey = defaultKeyHandler;
 
 	view.xmin = XMIN;
 	view.xmax = XMAX;
