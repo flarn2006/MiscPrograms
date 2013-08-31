@@ -60,12 +60,23 @@ double estimateSlope(yfunction func, double x, double accuracy)
 
 double scale(double value, double omin, double omax, double nmin, double nmax)
 {
+	/* Useful function to scale a value in one range to a different range.
+	   omin/omax - old range
+	   nmin/nmax - new range
+	*/
 	double x = (value - omin) / (omax - omin);
 	return x * (nmax - nmin) + nmin;
 }
 
 void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch, int *scrY, int *scrX)
 {
+	/* Displays a point on the screen at a location determined by graph coordinates.
+	   win       - ncurses window for drawing (can be NULL to only set scrY and scrX w/o drawing)
+	   view      - view parameters structure
+	   x/y       - graph coordinates for point
+	   ch        - character to display
+	   scrY/scrX - screen coordinates where point was drawn are saved here if not NULL
+	*/
 	int xm, ym; getmaxyx(win, ym, xm);
 	int xp = scale(x, view->xmin, view->xmax, 0, xm);
 	int yp = scale(y, view->ymin, view->ymax, ym, 0);
@@ -78,6 +89,8 @@ void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch, in
 
 char slopeChar(double slope)
 {
+	// Gets the character to display at a point in the graph with a given slope.
+	
 	double a = fabs(slope);
 	if (a < 0.5)        return '=';
 	else if (a < 1.5)   return slope>0 ? '/' : '\\';
@@ -86,6 +99,8 @@ char slopeChar(double slope)
 
 void drawAxes(WINDOW *win, const viewwin *view)
 {
+	// This function is what draws the axes on the screen.
+	
 	int xm, ym; getmaxyx(win, ym, xm);
 	double x0 = scale(0, view->xmin, view->xmax, 0, xm);
 	double y0 = scale(0, view->ymin, view->ymax, ym, 0);
@@ -97,19 +112,17 @@ void drawAxes(WINDOW *win, const viewwin *view)
 		mvwaddch(win, i, x0, '|');
 	}
 	
-	/*double j; for (j = view->xmin; j <= view->xmax; j += view->xscl) {
-		plotPoint(win, view, j, 0, '+');
-	}
-	
-	for (j = view->ymin; j <= view->ymax; j += view->yscl) {
-		plotPoint(win, view, 0, j, '+');
-	}*/
-	
 	mvwaddch(win, y0, x0, '+');
 }
 
 void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlopeChars)
 {
+	/* Draws a graph on the screen without axes.
+	   win              - ncurses window for drawing
+	   view             - view parameters structure
+	   yfunc            - function to graph (function pointer)
+	   enableSlopeChars - whether or not to call slopeChar to determine characters
+	*/
 	int xm, ym; getmaxyx(win, ym, xm);
 	double step = (view->xmax - view->xmin) / (xm + 1);
 	double x; for (x = view->xmin; x <= view->xmax; x += step)
@@ -129,6 +142,8 @@ double performEval(double x)
 
 void traceKeyHandler(int key, khdata *data)
 {
+	// Keyboard handling function for trace mode.
+	
 	int xm, ym; getmaxyx(stdscr, ym, xm);
 	double step = (data->view->xmax - data->view->xmin) / (xm + 1);
 
@@ -158,6 +173,8 @@ void traceKeyHandler(int key, khdata *data)
 
 void defaultKeyHandler(int key, khdata *data)
 {
+	// Default keyboard handling function.
+	
 	viewwin *view = data->view;
 	double xshift = 0, yshift = 0;
 	
@@ -194,7 +211,12 @@ void defaultKeyHandler(int key, khdata *data)
 
 void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
 {
-	// TODO: Make this marker take up multiple characters.
+	/* Draws the trace cursor on the screen.
+	   win   - ncurses window for drawing
+	   view  - view parameters structure
+	   yfunc - function to call to determine y coordinate
+	   x     - graph coordinate for x position
+	*/
 	double y = yfunc(x);
 	int yp, xp;
 	attron(COLOR_PAIR(2));
@@ -213,12 +235,9 @@ int main(int argc, char *argv[])
 	int key = 0;
 	yfunction yfunc = defaultFunction;
 
-	view.xmin = XMIN;
-	view.xmax = XMAX;
-	view.ymin = YMIN;
-	view.ymax = YMAX;
-	view.xscl = XSCL;
-	view.yscl = YSCL;
+	view.xmin = XMIN; view.xmax = XMAX;
+	view.ymin = YMIN; view.ymax = YMAX;
+	view.xscl = XSCL; view.yscl = YSCL;
 
 #ifndef NOLIBMATHEVAL
 	if (argc > 1) {
@@ -234,6 +253,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+	// ncurses initialization
 	initscr();
 	cbreak();
 	noecho();
@@ -248,14 +268,15 @@ int main(int argc, char *argv[])
 		static double trace = 0.0;
 		erase();
 	
+		// perform drawing
 		attron(COLOR_PAIR(1));
 		drawAxes(stdscr, &view);
 		attroff(COLOR_PAIR(1));
-	
 		drawGraph(stdscr, &view, yfunc, enableSlopeChars);
 		if (mode == MODE_TRACE) drawTrace(stdscr, &view, yfunc, trace);
 		refresh();
 
+		// wait for a key and call keyboard handler
 		khdata khd;
 		khd.view = &view;
 		khd.mode = &mode;
