@@ -141,6 +141,16 @@ void traceKeyHandler(int key, khdata *data)
 		handleKey = defaultKeyHandler;
 		*data->mode = MODE_GRAPH;
 	}
+
+	if (key == '\n') {
+		move(0, 4);
+		clrtoeol();
+		attron(COLOR_PAIR(2));
+		refresh();
+		curs_set(1); echo();
+		scanw("%lf", data->trace);
+		curs_set(0); noecho();
+	}
 }
 
 void defaultKeyHandler(int key, khdata *data)
@@ -187,8 +197,8 @@ void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
 	attron(A_REVERSE);
 	plotPoint(win, view, x, y, '*');
 	attroff(A_REVERSE);
-	mvprintw(0, 1, "X: %.5f", x);
-	mvprintw(1, 1, "Y: %.5f", y);
+	mvprintw(0, 1, "X: %.5lf", x);
+	mvprintw(1, 1, "Y: %.5lf", y);
 	attroff(COLOR_PAIR(2));
 }
 
