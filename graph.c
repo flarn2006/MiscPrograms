@@ -22,6 +22,7 @@ typedef struct _viewwin viewwin;
 typedef struct _khdata khdata;
 typedef double (*yfunction)(double x);
 typedef void (*key_handler)(int key, khdata *data);
+typedef enum {MODE_GRAPH, MODE_TRACE} oper_mode;
 
 struct _viewwin {
 	double xmin, xmax;
@@ -32,8 +33,8 @@ struct _viewwin {
 struct _khdata {
 	// Struct for pointers to data that key handlers may need to access
 	viewwin *view;
-	key_handler *keyHandler;
-	int *trace;
+	oper_mode *mode;
+	double *trace;
 };
 
 #ifndef NOLIBMATHEVAL
@@ -126,18 +127,19 @@ double performEval(double x)
 void traceKeyHandler(int key, khdata *data)
 {
 	int xm, ym; getmaxyx(stdscr, ym, xm);
-	
+	double step = (data->view->xmax - data->view->xmin) / (xm + 1);
+
 	switch (key) {
-		case KEY_LEFT:  *data->trace--; break;
-		case KEY_RIGHT: *data->trace++; break;
+		case KEY_LEFT:  *data->trace -= 4.0*step; break;
+		case KEY_RIGHT: *data->trace += 4.0*step; break;
 	}
 
-	if (*data->trace < 0) *data->trace = 0;
-	if (*data->trace > ym) *data->trace = ym;
+	if (*data->trace < data->view->xmin) *data->trace = data->view->xmin;
+	if (*data->trace > data->view->xmax) *data->trace = data->view->xmax;
 
 	if (key == 't') {
-		*data->trace = -1;
 		handleKey = defaultKeyHandler;
+		*data->mode = MODE_GRAPH;
 	}
 }
 
@@ -173,24 +175,27 @@ void defaultKeyHandler(int key, khdata *data)
 
 	if (key == 't') {
 		handleKey = traceKeyHandler;
-		*data->trace = 10;
+		*data->mode = MODE_TRACE;
 	}
 }
 
-void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, int trace)
+void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
 {
-	// TODO: Finish this!
+	// TODO: Make this marker take up multiple characters.
+	double y = yfunc(x);
 	attron(COLOR_PAIR(2));
-	plotPoint(win, view, (double)trace, yfunc((double)trace), 'X');
+	attron(A_REVERSE);
+	plotPoint(win, view, x, y, '*');
+	attroff(A_REVERSE);
+	mvprintw(0, 1, "X: %.5f", x);
+	mvprintw(1, 1, "Y: %.5f", y);
 	attroff(COLOR_PAIR(2));
 }
 
 int main(int argc, char *argv[])
 {
 	viewwin view;
-	khdata khd;
 	int key = 0;
-	int trace = -1;
 	yfunction yfunc = defaultFunction;
 
 	view.xmin = XMIN;
@@ -199,9 +204,6 @@ int main(int argc, char *argv[])
 	view.ymax = YMAX;
 	view.xscl = XSCL;
 	view.yscl = YSCL;
-
-	khd.view = &view;
-	khd.trace = &trace;
 
 #ifndef NOLIBMATHEVAL
 	if (argc > 1) {
@@ -227,6 +229,8 @@ int main(int argc, char *argv[])
 	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 
 	while (key != (int)'q') {	
+		static oper_mode mode = MODE_GRAPH;
+		static double trace = 0.0;
 		erase();
 	
 		attron(COLOR_PAIR(1));
@@ -234,8 +238,13 @@ int main(int argc, char *argv[])
 		attroff(COLOR_PAIR(1));
 	
 		drawGraph(stdscr, &view, yfunc, enableSlopeChars);
-		if (trace > -1) drawTrace(stdscr, &view, yfunc, trace);
+		if (mode == MODE_TRACE) drawTrace(stdscr, &view, yfunc, trace);
 		refresh();
+
+		khdata khd;
+		khd.view = &view;
+		khd.mode = &mode;
+		khd.trace = &trace;
 		key = getch(); handleKey(key, &khd);
 	}
 
