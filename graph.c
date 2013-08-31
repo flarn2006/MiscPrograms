@@ -64,13 +64,16 @@ double scale(double value, double omin, double omax, double nmin, double nmax)
 	return x * (nmax - nmin) + nmin;
 }
 
-void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch)
+void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch, int *scrY, int *scrX)
 {
 	int xm, ym; getmaxyx(win, ym, xm);
 	int xp = scale(x, view->xmin, view->xmax, 0, xm);
 	int yp = scale(y, view->ymin, view->ymax, ym, 0);
-	mvwaddch(win, yp, xp, ch);
-	//mvprintw(yp+1, xp+1, "[%c](%.2f, %.2f)", ch, x, y);
+	
+	if (scrX) *scrX = xp;
+	if (scrY) *scrY = yp;
+
+	if (win) mvwaddch(win, yp, xp, ch);
 }
 
 char slopeChar(double slope)
@@ -113,7 +116,7 @@ void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlop
 	{
 		double y = yfunc(x);
 		double d = estimateSlope(yfunc, x, step/2);
-		plotPoint(win, view, x, y, enableSlopeChars ? slopeChar(d):'#');
+		plotPoint(win, view, x, y, enableSlopeChars ? slopeChar(d):'#', NULL, NULL);
 	}
 }
 
@@ -193,12 +196,14 @@ void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
 {
 	// TODO: Make this marker take up multiple characters.
 	double y = yfunc(x);
+	int yp, xp;
 	attron(COLOR_PAIR(2));
-	attron(A_REVERSE);
-	plotPoint(win, view, x, y, '*');
-	attroff(A_REVERSE);
-	mvprintw(0, 0, "X: %.5lf", x);
-	mvprintw(1, 0, "Y: %.5lf", y);
+	plotPoint(win, view, x, y, '+', &yp, &xp);
+	mvwaddch(win, yp-1, xp, '|'); mvwaddch(win, yp+1, xp, '|');
+	mvwaddch(win, yp, xp-2, '-'); mvwaddch(win, yp, xp-1, '-');
+	mvwaddch(win, yp, xp+1, '-'); mvwaddch(win, yp, xp+2, '-');
+	mvwprintw(win, 0, 0, "X: %.5lf", x);
+	mvwprintw(win, 1, 0, "Y: %.5lf", y);
 	attroff(COLOR_PAIR(2));
 }
 
