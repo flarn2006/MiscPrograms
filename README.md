@@ -9,6 +9,7 @@ Unless specified otherwise, they are all licensed under the [Creative Commons BY
 * Arrow keys: Pan view
 * `S`: Toggle slope display
 * `T`: Enter trace mode
+* `W`: Edit view window parameters
 * `Q`: Quit
 
 ### Trace mode

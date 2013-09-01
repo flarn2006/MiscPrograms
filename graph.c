@@ -5,6 +5,8 @@
 // (Edit defaultFunction to change which function to graph then.)
 
 #include <curses.h>
+#include <form.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #ifndef NOLIBMATHEVAL
@@ -95,6 +97,123 @@ char slopeChar(double slope)
 	if (a < 0.5)        return '=';
 	else if (a < 1.5)   return slope>0 ? '/' : '\\';
 	else                return '|';
+}
+
+#define FIELD_MAX_CHARS 32
+
+int editViewWindow(viewwin *view)
+{
+	// Figure out where to put the window
+	int wwidth = 21, wheight = 9;
+	int ym, xm; getmaxyx(stdscr, ym, xm);
+	int wy = ym/2 - wheight/2;
+	int wx = xm/2 - wwidth/2;
+
+	// Create a new window and draw the form
+	WINDOW *fwin = newwin(wheight, wwidth, wy, wx);
+	keypad(fwin, TRUE);
+	werase(fwin);
+	
+	wattron(fwin, A_BOLD);
+	box(fwin, 0, 0);
+	mvwprintw(fwin, 0, 4, " VIEW WINDOW ");
+	mvwprintw(fwin, 2, 3, "Xmin =");
+	mvwprintw(fwin, 3, 3, "Xmax =");
+	mvwprintw(fwin, 4, 3, "Ymin =");
+	mvwprintw(fwin, 5, 3, "Ymax =");
+	wattroff(fwin, A_BOLD);
+
+	mvwprintw(fwin, 7, 6, "[SPC] OK");
+
+	// Create the form fields
+	FIELD *fields[5];
+	int i; for (i=0; i<4; i++) {
+		fields[i] = new_field(1, 8, i, 0, 0, 0);
+		set_field_back(fields[i], A_REVERSE | A_UNDERLINE);
+		set_field_type(fields[i], TYPE_NUMERIC, 6, 0.0, 0.0);
+		field_opts_off(fields[i], O_AUTOSKIP | O_STATIC);
+		set_max_field(fields[i], FIELD_MAX_CHARS);
+	}
+	fields[4] = NULL;
+
+	// Fill the form fields with initial values
+	char printbuf[FIELD_MAX_CHARS+1];
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->xmin);
+	set_field_buffer(fields[0], 0, printbuf);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->xmax);
+	set_field_buffer(fields[1], 0, printbuf);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->ymin);
+	set_field_buffer(fields[2], 0, printbuf);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->ymax);
+	set_field_buffer(fields[3], 0, printbuf);
+
+	// Create a subwindow for the form fields
+	WINDOW *fsub = derwin(fwin, 4, 8, 2, 10);
+	keypad(fsub, TRUE);
+	
+	// Create the actual form
+	FORM *f = new_form(fields);
+	set_form_win(f, fwin);
+	set_form_sub(f, fsub);
+	post_form(f);
+	wrefresh(fwin);
+	wrefresh(fsub);
+	curs_set(1);
+
+	// Handle input
+	int savewin = 1;
+	int exitloop = 0;
+	int ch; while (!exitloop) {
+		switch (ch = wgetch(fwin)) {
+			case '\n': case KEY_DOWN:
+				form_driver(f, REQ_NEXT_FIELD);
+				break;
+			case KEY_UP:
+				form_driver(f, REQ_PREV_FIELD);
+				break;
+			case KEY_BACKSPACE:
+				form_driver(f, REQ_DEL_PREV);
+				break;
+			case ' ':
+				exitloop = 1;
+				break;
+			case 'q':
+				savewin = 0;
+				exitloop = 1;
+				break;
+			default:
+				form_driver(f, ch);
+				break;
+		}
+	}
+
+	// Save the window parameters if necessary
+	viewwin view_temp;  // Storage for pre-validation values
+
+	if (savewin) {
+		sscanf(field_buffer(fields[0], 0), "%lf", &view_temp.xmin);
+		sscanf(field_buffer(fields[1], 0), "%lf", &view_temp.xmax);
+		sscanf(field_buffer(fields[2], 0), "%lf", &view_temp.ymin);
+		sscanf(field_buffer(fields[3], 0), "%lf", &view_temp.ymax);
+
+		if (view_temp.xmin >= view_temp.xmax || view_temp.ymin >= view_temp.ymax) savewin = 0;
+	}
+
+	if (savewin) {
+		// Copy contents of view_temp to view
+		memcpy(view, &view_temp, sizeof(viewwin));
+	}
+
+	// Clean up
+	curs_set(0);
+	unpost_form(f);
+	free_form(f);
+	for (i=0; i<4; i++) free_field(fields[i]);
+	delwin(fsub);
+	delwin(fwin);
+	refresh();
+
+	return savewin;
 }
 
 void drawAxes(WINDOW *win, const viewwin *view)
@@ -207,6 +326,8 @@ void defaultKeyHandler(int key, khdata *data)
 		handleKey = traceKeyHandler;
 		*data->mode = MODE_TRACE;
 	}
+
+	if (key == 'w') editViewWindow(view);
 }
 
 void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
