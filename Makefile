@@ -22,7 +22,7 @@ countpi: countpi.c
 expand: expand.c
 	$(CC) $(CFLAGS) expand.c -o expand
 graph: graph.c
-	$(CC) $(CFLAGS) graph.c -lncurses -lmatheval -lm -o graph
+	$(CC) $(CFLAGS) graph.c -lform -lncurses -lmatheval -lm -o graph
 life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
 money: money.c
