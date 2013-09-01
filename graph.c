@@ -138,13 +138,13 @@ int editViewWindow(viewwin *view)
 
 	// Fill the form fields with initial values
 	char printbuf[FIELD_MAX_CHARS+1];
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->xmin);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->xmin);
 	set_field_buffer(fields[0], 0, printbuf);
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->xmax);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->xmax);
 	set_field_buffer(fields[1], 0, printbuf);
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->ymin);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymin);
 	set_field_buffer(fields[2], 0, printbuf);
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%lg", view->ymax);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymax);
 	set_field_buffer(fields[3], 0, printbuf);
 
 	// Create a subwindow for the form fields
