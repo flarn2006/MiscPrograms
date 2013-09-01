@@ -328,6 +328,12 @@ void defaultKeyHandler(int key, khdata *data)
 	}
 
 	if (key == 'w') editViewWindow(view);
+
+	if (key == 'r') {
+		view->xmin = XMIN; view->xmax = XMAX;
+		view->ymin = YMIN; view->ymax = YMAX;
+		view->xscl = XSCL; view->yscl = YSCL;
+	}
 }
 
 void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)

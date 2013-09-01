@@ -10,6 +10,7 @@ Unless specified otherwise, they are all licensed under the [Creative Commons BY
 * `S`: Toggle slope display
 * `T`: Enter trace mode
 * `W`: Edit view window parameters
+* `R`: Reset view to default
 * `Q`: Quit
 
 ### Trace mode
