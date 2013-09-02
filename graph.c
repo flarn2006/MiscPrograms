@@ -104,7 +104,7 @@ char slopeChar(double slope)
 int editViewWindow(viewwin *view)
 {
 	// Figure out where to put the window
-	int wwidth = 21, wheight = 9;
+	int wwidth = 21, wheight = 11;
 	int ym, xm; getmaxyx(stdscr, ym, xm);
 	int wy = ym/2 - wheight/2;
 	int wx = xm/2 - wwidth/2;
@@ -119,22 +119,24 @@ int editViewWindow(viewwin *view)
 	mvwprintw(fwin, 0, 4, " VIEW WINDOW ");
 	mvwprintw(fwin, 2, 3, "Xmin =");
 	mvwprintw(fwin, 3, 3, "Xmax =");
-	mvwprintw(fwin, 4, 3, "Ymin =");
-	mvwprintw(fwin, 5, 3, "Ymax =");
+	mvwprintw(fwin, 4, 3, "Xscl =");
+	mvwprintw(fwin, 5, 3, "Ymin =");
+	mvwprintw(fwin, 6, 3, "Ymax =");
+	mvwprintw(fwin, 7, 3, "Yscl =");
 	wattroff(fwin, A_BOLD);
 
-	mvwprintw(fwin, 7, 6, "[SPC] OK");
+	mvwprintw(fwin, 9, 6, "[SPC] OK");
 
 	// Create the form fields
-	FIELD *fields[5];
-	int i; for (i=0; i<4; i++) {
+	FIELD *fields[7];
+	int i; for (i=0; i<6; i++) {
 		fields[i] = new_field(1, 8, i, 0, 0, 0);
 		set_field_back(fields[i], A_REVERSE | A_UNDERLINE);
 		set_field_type(fields[i], TYPE_NUMERIC, 6, 0.0, 0.0);
 		field_opts_off(fields[i], O_AUTOSKIP | O_STATIC);
 		set_max_field(fields[i], FIELD_MAX_CHARS);
 	}
-	fields[4] = NULL;
+	fields[6] = NULL;
 
 	// Fill the form fields with initial values
 	char printbuf[FIELD_MAX_CHARS+1];
@@ -142,13 +144,17 @@ int editViewWindow(viewwin *view)
 	set_field_buffer(fields[0], 0, printbuf);
 	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->xmax);
 	set_field_buffer(fields[1], 0, printbuf);
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymin);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->xscl);
 	set_field_buffer(fields[2], 0, printbuf);
-	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymax);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymin);
 	set_field_buffer(fields[3], 0, printbuf);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->ymax);
+	set_field_buffer(fields[4], 0, printbuf);
+	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->yscl);
+	set_field_buffer(fields[5], 0, printbuf);
 
 	// Create a subwindow for the form fields
-	WINDOW *fsub = derwin(fwin, 4, 8, 2, 10);
+	WINDOW *fsub = derwin(fwin, 6, 8, 2, 10);
 	keypad(fsub, TRUE);
 	
 	// Create the actual form
@@ -193,8 +199,10 @@ int editViewWindow(viewwin *view)
 	if (savewin) {
 		sscanf(field_buffer(fields[0], 0), "%lf", &view_temp.xmin);
 		sscanf(field_buffer(fields[1], 0), "%lf", &view_temp.xmax);
-		sscanf(field_buffer(fields[2], 0), "%lf", &view_temp.ymin);
-		sscanf(field_buffer(fields[3], 0), "%lf", &view_temp.ymax);
+		sscanf(field_buffer(fields[2], 0), "%lf", &view_temp.xscl);
+		sscanf(field_buffer(fields[3], 0), "%lf", &view_temp.ymin);
+		sscanf(field_buffer(fields[4], 0), "%lf", &view_temp.ymax);
+		sscanf(field_buffer(fields[5], 0), "%lf", &view_temp.yscl);
 
 		if (view_temp.xmin >= view_temp.xmax || view_temp.ymin >= view_temp.ymax) savewin = 0;
 	}
@@ -208,12 +216,21 @@ int editViewWindow(viewwin *view)
 	curs_set(0);
 	unpost_form(f);
 	free_form(f);
-	for (i=0; i<4; i++) free_field(fields[i]);
+	for (i=0; i<6; i++) free_field(fields[i]);
 	delwin(fsub);
 	delwin(fwin);
 	refresh();
 
 	return savewin;
+}
+
+void getViewStep(WINDOW *win, const viewwin *view, double *xstep, double *ystep)
+{
+	// Gets the 'value' of one character on either or both axes.
+
+	int xm, ym; getmaxyx(win, ym, xm);
+	if (xstep) *xstep = (view->xmax - view->xmin) / (xm + 1);
+	if (ystep) *ystep = (view->ymax - view->ymin) / (ym + 1);
 }
 
 void drawAxes(WINDOW *win, const viewwin *view)
@@ -223,12 +240,18 @@ void drawAxes(WINDOW *win, const viewwin *view)
 	int xm, ym; getmaxyx(win, ym, xm);
 	double x0 = scale(0, view->xmin, view->xmax, 0, xm);
 	double y0 = scale(0, view->ymin, view->ymax, ym, 0);
+
+	double xstep, ystep; getViewStep(win, view, &xstep, &ystep);
 	
 	int i; for (i=0; i<=xm; i++) {
-		mvwaddch(win, y0, i, '-');
+		double plotx = view->xmin + xstep * i;
+		int tick = fabs(fmod(plotx, view->xscl)) < xstep;
+		mvwaddch(win, y0, i, tick ? '+':'-');
 	}
 	for (i=0; i<=ym; i++) {
-		mvwaddch(win, i, x0, '|');
+		double ploty = view->ymin + ystep * i;
+		int tick = fabs(fmod(ploty, view->yscl)) < ystep;
+		mvwaddch(win, i, x0, tick ? '+':'|');
 	}
 	
 	mvwaddch(win, y0, x0, '+');
@@ -243,7 +266,7 @@ void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlop
 	   enableSlopeChars - whether or not to call slopeChar to determine characters
 	*/
 	int xm, ym; getmaxyx(win, ym, xm);
-	double step = (view->xmax - view->xmin) / (xm + 1);
+	double step; getViewStep(win, view, &step, NULL);
 	double x; for (x = view->xmin; x <= view->xmax; x += step)
 	{
 		double y = yfunc(x);
@@ -263,8 +286,7 @@ void traceKeyHandler(int key, khdata *data)
 {
 	// Keyboard handling function for trace mode.
 	
-	int xm, ym; getmaxyx(stdscr, ym, xm);
-	double step = (data->view->xmax - data->view->xmin) / (xm + 1);
+	double step; getViewStep(stdscr, data->view, &step, NULL);
 
 	switch (key) {
 		case KEY_LEFT:  *data->trace -= 4.0*step; break;
