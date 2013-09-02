@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 {
 	struct mover movers[26];
 
+	srand((unsigned)time(NULL));
 	initscr();
 	cbreak();
 	noecho();
