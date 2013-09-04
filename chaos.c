@@ -7,10 +7,10 @@ struct point {
 	double x;
 };
 
+int ym, xm; //max Y/X terminal coordinates
+
 void plotPoint(WINDOW *win, struct point *pt, char ch)
 {
-	int ym, xm; getmaxyx(win, ym, xm);
-	
 	int y = (int)(pt->y * (double)ym);
 	int x = (int)(pt->x * (double)xm);
 
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 	cbreak();
 	noecho();
 	curs_set(0);
+	getmaxyx(stdscr, ym, xm);
 
 	attron(A_BOLD);
 	mvprintw(0, 0, "Use the W/A/D keys to select a vertex.\n");
