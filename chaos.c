@@ -13,14 +13,18 @@ unsigned int maximum = 0;
 
 char getLevelChar(unsigned int level, unsigned int highest)
 {
-	const char *levels = ".-*O@";
+	const char *levels = ".-*@#";
 	level *= 4; //avoid floating point math
 	
-	int index = level/highest;
-	
+	if (level == 0) return ' ';
+
+	int index = (signed)(level/highest);
+
 	if (index > 4 || index < 0) {
-		//shouldn't happen, but just in case...
-		return '!'; //subtlely indicate there's a problem
+		mvprintw(0, 0, "Index out of range!\n");
+		printw("level(*5) = %u, highest = %u, index = %d", level, highest, index);
+		clrtoeol();
+		return '!';
 	} else {
 		if (highest == 0) return levels[4];
 		else return levels[index];
@@ -51,6 +55,15 @@ void movePointHalfway(struct point *pt, const struct point *dest)
 {
 	pt->x = (pt->x + dest->x) / 2.0;
 	pt->y = (pt->y + dest->y) / 2.0;
+}
+
+void drawPlot(const unsigned int *plot, int width)
+{
+	int y, x;
+	for (y=0; y<=ym; y++) for (x=0; x<=xm; x++) {
+		char ch = getLevelChar(plot[y*width + x], maximum);
+		mvaddch(y, x, ch);
+	}
 }
 
 int main(int argc, char *argv[])
@@ -90,18 +103,25 @@ int main(int argc, char *argv[])
 	cursor = vertices[0];
 	
 	int ch = 0; while (ch != 'q') {
-		if (ch == 'w' || ch == 'a' || ch == 'd' || ch == ' ') {
+		if (ch == 'w' || ch == 'a' || ch == 'd' || ch == ' ' || ch == '\n') {
 			int n; switch (ch) {
 				case 'w': n = 0; break;
 				case 'a': n = 1; break;
 				case 'd': n = 2; break;
-				case ' ': n = rand()%vcount; break;
+				case ' ': case '\n': n = -1; break;
 			}
 			int last_y, last_x;
-			char ch = plotPoint(plot, xm+1, &cursor, 0, &last_y, &last_x);
-			movePointHalfway(&cursor, &vertices[n]);
+			int count = 1;
+			if (ch == '\n') count = 100;
+
+			int i; for (i=0; i<count; i++) {
+				int v_id = n;
+				if (v_id == -1) v_id = rand() % vcount;
+				char ch = plotPoint(plot, xm+1, &cursor, 0, &last_y, &last_x);
+				movePointHalfway(&cursor, &vertices[v_id]);
+			}
 			
-			// TODO: Draw all points with levels
+			drawPlot(plot, xm+1);
 			
 			attron(A_REVERSE);
 			mvaddch(last_y, last_x, ch);
