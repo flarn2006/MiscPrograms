@@ -114,17 +114,18 @@ int main(int argc, char *argv[])
 			int count = 1;
 			if (ch == '\n') count = 100;
 
+			char last_ch;
 			int i; for (i=0; i<count; i++) {
 				int v_id = n;
 				if (v_id == -1) v_id = rand() % vcount;
-				char ch = plotPoint(plot, xm+1, &cursor, 0, &last_y, &last_x);
+				last_ch = plotPoint(plot, xm+1, &cursor, 0, &last_y, &last_x);
 				movePointHalfway(&cursor, &vertices[v_id]);
 			}
 			
 			drawPlot(plot, xm+1);
 			
 			attron(A_REVERSE);
-			mvaddch(last_y, last_x, ch);
+			mvaddch(last_y, last_x, last_ch);
 			attroff(A_REVERSE);
 		}
 
