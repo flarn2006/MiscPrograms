@@ -1,7 +1,7 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters bounce chaos charsnow consine countpi expand graph life money movers particles polyline rainbow rule90 runlength series stats
+TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers particles polyline rainbow rule90 runlength series stats
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -21,8 +21,6 @@ consine: consine.c
 	$(CC) $(CFLAGS) consine.c -lncurses -lm -o consine
 countpi: countpi.c
 	$(CC) $(CFLAGS) countpi.c -o countpi
-expand: expand.c
-	$(CC) $(CFLAGS) expand.c -o expand
 graph: graph.c
 	$(CC) $(CFLAGS) graph.c -lform -lncurses -lmatheval -lm -o graph
 life: life.c
