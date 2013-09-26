@@ -1,7 +1,7 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers particles polyline rainbow rule90 runlength series stats
+TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow rule90 runlength series stats
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -29,6 +29,8 @@ money: money.c
 	$(CC) $(CFLAGS) money.c -lm -o money
 movers: movers.c delayms.h
 	$(CC) $(CFLAGS) movers.c -lncurses -o movers
+myatoi: myatoi.c
+	$(CC) $(CFLAGS) myatoi.c -o myatoi
 particles: particles.cpp delayms.h
 	$(CPP) $(CFLAGS) particles.cpp -lncurses -o particles
 playnotes: playnotes.c
