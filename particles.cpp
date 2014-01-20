@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
 			mvprintw(4, 0, "<[/]> Maximum age:    %.1f", maxAge);
 			mvprintw(5, 0, "<X>   Clear all particles");
 			mvprintw(6, 0, "<`>   Change display");
+			mvprintw(7, 0, "<Q>   Quit program");
 		}
 		attroff(A_BOLD); attroff(COLOR_PAIR(4));
 
