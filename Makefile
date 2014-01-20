@@ -1,7 +1,7 @@
 CC="/usr/bin/gcc"
 CPP="/usr/bin/g++"
 CFLAGS=-O3
-TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow rule90 runlength series stats
+TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow roman rule90 runlength series stats
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -39,6 +39,8 @@ polyline: polyline.c
 	$(CC) $(CFLAGS) polyline.c -o polyline
 rainbow: rainbow.c
 	$(CC) $(CFLAGS) rainbow.c -o rainbow
+roman: roman.c
+	$(CC) $(CFLAGS) roman.c -o roman
 rule90: rule90.c
 	$(CC) $(CFLAGS) rule90.c -o rule90
 runlength: runlength.c
