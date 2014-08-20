@@ -33,6 +33,8 @@ class Particle
 			vx *= maxSpeed; vy *= maxSpeed;
 
 			ax = ay = 0.0f;
+
+			age = 0.0f;
 		}
 
 		void simulate(float time)
@@ -107,9 +109,9 @@ int main(int argc, char *argv[])
 					pair = 3;
 				}
 
-				attron(COLOR_PAIR(pair));
+				attron(A_BOLD); attron(COLOR_PAIR(pair));
 				mvprintw((int)i->y, (int)i->x * 2, "()");
-				attroff(COLOR_PAIR(pair));
+				attroff(COLOR_PAIR(pair)); attroff(A_BOLD);
 			}
 
 			i->setAccel(accelX, accelY);
