@@ -1,5 +1,5 @@
-CC="/usr/bin/gcc"
-CPP="/usr/bin/g++"
+CC="gcc"
+CPP="g++"
 CFLAGS=-O3
 TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow roman rule90 runlength series stats
 TARGETS_LIBAO=playnotes
