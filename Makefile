@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow roman rule90 runlength series stats
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi graph life money movers myatoi particles polyline rainbow roman rule90 runlength series stats
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -11,6 +11,8 @@ clean:
 
 addletters: addletters.c
 	$(CC) $(CFLAGS) addletters.c -o addletters
+bestguess: bestguess.cpp
+	$(CPP) $(CFLAGS) bestguess.cpp -o bestguess
 bounce: bounce.c delayms.h
 	$(CC) $(CFLAGS) bounce.c -lncurses -o bounce
 chaos: chaos.c
