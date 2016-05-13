@@ -1,8 +1,8 @@
-// Created by flarn2006 <flarn2006@gmail.com>
-// Compile with libmatheval (http://www.gnu.org/software/libmatheval/)
-// Also requires ncurses (Google it.)
-// To compile without libmatheval, use -DNOLIBMATHEVAL.
-// (Edit defaultFunction to change which function to graph then.)
+/* Created by flarn2006 <flarn2006@gmail.com> */
+/* Compile with libmatheval (http://www.gnu.org/software/libmatheval/) */
+/* Also requires ncurses (Google it.) */
+/* To compile without libmatheval, use -DNOLIBMATHEVAL. */
+/* (Edit defaultFunction to change which function to graph then.) */
 
 #include <curses.h>
 #include <form.h>
@@ -33,7 +33,7 @@ struct _viewwin {
 };
 
 struct _khdata {
-	// Struct for pointers to data that key handlers may need to access
+	/* Struct for pointers to data that key handlers may need to access */
 	viewwin *view;
 	oper_mode *mode;
 	double *trace;
@@ -91,7 +91,7 @@ void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch, in
 
 char slopeChar(double slope)
 {
-	// Gets the character to display at a point in the graph with a given slope.
+	/* Gets the character to display at a point in the graph with a given slope. */
 	
 	double a = fabs(slope);
 	if (a < 0.5)        return '=';
@@ -103,13 +103,13 @@ char slopeChar(double slope)
 
 int editViewWindow(viewwin *view)
 {
-	// Figure out where to put the window
+	/* Figure out where to put the window */
 	int wwidth = 21, wheight = 11;
 	int ym, xm; getmaxyx(stdscr, ym, xm);
 	int wy = ym/2 - wheight/2;
 	int wx = xm/2 - wwidth/2;
 
-	// Create a new window and draw the form
+	/* Create a new window and draw the form */
 	WINDOW *fwin = newwin(wheight, wwidth, wy, wx);
 	keypad(fwin, TRUE);
 	werase(fwin);
@@ -127,7 +127,7 @@ int editViewWindow(viewwin *view)
 
 	mvwprintw(fwin, 9, 6, "[SPC] OK");
 
-	// Create the form fields
+	/* Create the form fields */
 	FIELD *fields[7];
 	int i; for (i=0; i<6; i++) {
 		fields[i] = new_field(1, 8, i, 0, 0, 0);
@@ -138,7 +138,7 @@ int editViewWindow(viewwin *view)
 	}
 	fields[6] = NULL;
 
-	// Fill the form fields with initial values
+	/* Fill the form fields with initial values */
 	char printbuf[FIELD_MAX_CHARS+1];
 	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->xmin);
 	set_field_buffer(fields[0], 0, printbuf);
@@ -153,11 +153,11 @@ int editViewWindow(viewwin *view)
 	snprintf(printbuf, FIELD_MAX_CHARS+1, "%.5lf", view->yscl);
 	set_field_buffer(fields[5], 0, printbuf);
 
-	// Create a subwindow for the form fields
+	/* Create a subwindow for the form fields */
 	WINDOW *fsub = derwin(fwin, 6, 8, 2, 10);
 	keypad(fsub, TRUE);
 	
-	// Create the actual form
+	/* Create the actual form */
 	FORM *f = new_form(fields);
 	set_form_win(f, fwin);
 	set_form_sub(f, fsub);
@@ -166,7 +166,7 @@ int editViewWindow(viewwin *view)
 	wrefresh(fsub);
 	curs_set(1);
 
-	// Handle input
+	/* Handle input */
 	int savewin = 1;
 	int exitloop = 0;
 	int ch; while (!exitloop) {
@@ -193,8 +193,8 @@ int editViewWindow(viewwin *view)
 		}
 	}
 
-	// Save the window parameters if necessary
-	viewwin view_temp;  // Storage for pre-validation values
+	/* Save the window parameters if necessary */
+	viewwin view_temp;  /* Storage for pre-validation values */
 
 	if (savewin) {
 		sscanf(field_buffer(fields[0], 0), "%lf", &view_temp.xmin);
@@ -208,11 +208,11 @@ int editViewWindow(viewwin *view)
 	}
 
 	if (savewin) {
-		// Copy contents of view_temp to view
+		/* Copy contents of view_temp to view */
 		memcpy(view, &view_temp, sizeof(viewwin));
 	}
 
-	// Clean up
+	/* Clean up */
 	curs_set(0);
 	unpost_form(f);
 	free_form(f);
@@ -226,7 +226,7 @@ int editViewWindow(viewwin *view)
 
 void getViewStep(WINDOW *win, const viewwin *view, double *xstep, double *ystep)
 {
-	// Gets the 'value' of one character on either or both axes.
+	/* Gets the 'value' of one character on either or both axes. */
 
 	int xm, ym; getmaxyx(win, ym, xm);
 	if (xstep) *xstep = (view->xmax - view->xmin) / (xm + 1);
@@ -235,7 +235,7 @@ void getViewStep(WINDOW *win, const viewwin *view, double *xstep, double *ystep)
 
 void drawAxes(WINDOW *win, const viewwin *view)
 {
-	// This function is what draws the axes on the screen.
+	/* This function is what draws the axes on the screen. */
 	
 	int xm, ym; getmaxyx(win, ym, xm);
 	double x0 = scale(0, view->xmin, view->xmax, 0, xm);
@@ -284,7 +284,7 @@ double performEval(double x)
 
 void traceKeyHandler(int key, khdata *data)
 {
-	// Keyboard handling function for trace mode.
+	/* Keyboard handling function for trace mode. */
 	
 	double step; getViewStep(stdscr, data->view, &step, NULL);
 
@@ -314,7 +314,7 @@ void traceKeyHandler(int key, khdata *data)
 
 void defaultKeyHandler(int key, khdata *data)
 {
-	// Default keyboard handling function.
+	/* Default keyboard handling function. */
 	
 	viewwin *view = data->view;
 	double xshift = 0, yshift = 0;
@@ -402,7 +402,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	// ncurses initialization
+	/* ncurses initialization */
 	initscr();
 	cbreak();
 	noecho();
@@ -417,7 +417,7 @@ int main(int argc, char *argv[])
 		static double trace = 0.0;
 		erase();
 	
-		// perform drawing
+		/* perform drawing */
 		attron(COLOR_PAIR(1));
 		drawAxes(stdscr, &view);
 		attroff(COLOR_PAIR(1));
@@ -425,7 +425,7 @@ int main(int argc, char *argv[])
 		if (mode == MODE_TRACE) drawTrace(stdscr, &view, yfunc, trace);
 		refresh();
 
-		// wait for a key and call keyboard handler
+		/* wait for a key and call keyboard handler */
 		khdata khd;
 		khd.view = &view;
 		khd.mode = &mode;

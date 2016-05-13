@@ -23,7 +23,7 @@ void printPart(int value, char one, char five, char ten)
 
 void printRoman(int value)
 {
-	//puts("Hey Niko, let's go bowling!");
+	/*puts("Hey Niko, let's go bowling!");*/
 	
 	while (value >= 1000) {
 		putchar('M');

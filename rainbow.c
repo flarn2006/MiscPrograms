@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
 	FILE *fp;
 	
-	// Process the program's arguments
+	/* Process the program's arguments */
 	if (argc == 2) {
 		fp = fopen(argv[1], "r");
 		if (!fp) {
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
-	// Loop through the file
-	for (;;) { // Loop ends when fgetc(fp) returns EOF
+	/* Loop through the file */
+	for (;;) { /* Loop ends when fgetc(fp) returns EOF */
 		static ansi_color color = RED;
 		int ch = fgetc(fp);
 		if (ch == EOF) break;

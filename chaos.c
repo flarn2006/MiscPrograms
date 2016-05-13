@@ -8,13 +8,13 @@ struct point {
 	double x;
 };
 
-int ym, xm; //max Y/X terminal coordinates
+int ym, xm; /*max Y/X terminal coordinates*/
 unsigned int maximum = 0;
 
 char getLevelChar(unsigned int level, unsigned int highest)
 {
 	const char *levels = ".-*@#";
-	level *= 4; //avoid floating point math
+	level *= 4; /*avoid floating point math*/
 	
 	if (level == 0) return ' ';
 

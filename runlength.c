@@ -7,7 +7,7 @@ char *catArgs(int argc, char *argv[])
 	size_t length = 0;
 	int i; for (i=1; i<argc; i++) {
 		length += strlen(argv[i]);
-		if (i < argc - 1) length++; // space
+		if (i < argc - 1) length++; /* space */
 	}
 
 	char *buf = malloc(length + 1);

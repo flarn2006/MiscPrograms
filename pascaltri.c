@@ -6,7 +6,7 @@ int getValue(int *ar, size_t count, size_t pos);
 
 int main(int argc, char *argv[])
 {
-	// Process arguments
+	/* Process arguments */
 	int rows = 10;
 	int width = 4;
 	if (argc > 1) {
@@ -23,16 +23,16 @@ int main(int argc, char *argv[])
 		return 255;
 	}
 
-	// Set up the arrays
+	/* Set up the arrays */
 	int *row = malloc(sizeof(int) * rows);
 	int *prev = malloc(sizeof(int) * rows);
 	row[0] = 1;
 	prev[0] = 1;
 
-	// Display Pascal's triangle
+	/* Display Pascal's triangle */
 	int i; for (i=0; i<rows; ++i) {
 		int j;
-		// Display the current row
+		/* Display the current row */
 		for (j=0; j<(rows - i - 1); ++j) {
 			int k; for (k=0; k < (width + 1) / 2; ++k) {
 				putchar(' ');
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		}
 		puts("");
 
-		// Calculate the next row
+		/* Calculate the next row */
 		if (i < rows - 1) {
 			for (j=0; j<=i+1; ++j) {
 				row[j] = getValue(prev, i+1, j) + getValue(prev, i+1, j-1);
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	// Free allocated memory
+	/* Free allocated memory */
 	free(row);
 	free(prev);
 

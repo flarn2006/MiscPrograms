@@ -1,7 +1,7 @@
-// playnotes.c - Plays a string of notes given on the command line.
-// Created by flarn2006 - http://flarn2006.blogspot.com/
-// Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported
-// Requires libao (http://xiph.org/ao/) - Compile with "-lao -lm"
+/* playnotes.c - Plays a string of notes given on the command line. */
+/* Created by flarn2006 - http://flarn2006.blogspot.com/ */
+/* Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported */
+/* Requires libao (http://xiph.org/ao/) - Compile with "-lao -lm" */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	double duration = NOTE_LENGTH;
 	float octave_mult = 1.0f;
 
-	if (argc == 2);  // do nothing
+	if (argc == 2);  /* do nothing */
 	else if (argc == 3)
 	{
 		sscanf(argv[2], "%lf", &duration);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 				if (capital) octave_mult *= 2.0f;
 				play_note(device, tofreq(ch) * octave_mult, duration);
 				if (capital) octave_mult *= 0.5f;
-				break; //not needed, but good practice
+				break; /*not needed, but good practice*/
 		}
 	}
 	
@@ -102,6 +102,6 @@ double tofreq(char note)
 		case 'G': case 'g': return 392.00; break;
 		case 'A': case 'a': return 440.00; break;
 		case 'B': case 'b': return 493.88; break;
-		default:  return 0.00;   break; //rest
+		default:  return 0.00;   break; /*rest*/
 	}
 }

@@ -1,6 +1,6 @@
-// consine.c - Displays a 2D sine pattern in the console
-// Created by flarn2006
-// License: Creative Commons BY-SA 3.0
+/* consine.c - Displays a 2D sine pattern in the console */
+/* Created by flarn2006 */
+/* License: Creative Commons BY-SA 3.0 */
 
 #include <curses.h>
 #include <math.h>

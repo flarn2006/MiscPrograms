@@ -18,7 +18,7 @@ void drawMover(WINDOW *win, const struct mover *mv)
 
 void moveMover(WINDOW *win, struct mover *mv)
 {
-	int dir = rand() & 3; // perhaps faster than rand() % 4?
+	int dir = rand() & 3; /* perhaps faster than rand() % 4? */
 	
 	switch (dir) {
 		case 0: /* up */    mv->y--; break;
@@ -27,7 +27,7 @@ void moveMover(WINDOW *win, struct mover *mv)
 		case 3: /* right */ mv->x++; break;
 	}
 	
-	// perform bounds checking and wrap around
+	/* perform bounds checking and wrap around */
 	int ym, xm; getmaxyx(win, ym, xm);
 	if (mv->y < 0) mv->y = ym;
 	if (mv->y > ym) mv->y = 0;

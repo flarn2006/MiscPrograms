@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 		
 		if (rand() & 1) attron(A_BOLD);
 		dropchar(ch, x, color, heights);
-		attroff(A_BOLD); //if it wasn't set to begin with nothing will happen
+		attroff(A_BOLD); /*if it wasn't set to begin with nothing will happen*/
 	}
 
 	return 0;
