@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Usage: %s [number-of-rows] [width]\n", argv[0]);
 		fprintf(stderr, "* number-of-rows, if present, must be at least 1.\n");
 		fprintf(stderr, "* width, if present, must be at least 2.\n");
-		fprintf(stderr, "  - For best results, use an even number.");
+		fprintf(stderr, "  - For best results, use an even number.\n");
 		return 255;
 	}
 
