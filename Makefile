@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi graph life money movers myatoi particles pascaltri polyline rainbow roman rule90 runlength series stats
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 runlength series stats
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -25,6 +25,8 @@ countpi: countpi.c
 	$(CC) $(CFLAGS) countpi.c -o countpi
 graph: graph.c
 	$(CC) $(CFLAGS) graph.c -lform -lncurses -lmatheval -lm -o graph
+hdraw: hdraw.c
+	$(CC) $(CFLAGS) hdraw.c -o hdraw
 life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
 money: money.c
