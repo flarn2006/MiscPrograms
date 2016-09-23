@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 runlength series stats
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 runlength series stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -55,3 +55,5 @@ series: series.c
 	$(CC) $(CFLAGS) series.c -o series
 stats: stats.c
 	$(CC) $(CFLAGS) stats.c -lm -o stats
+throttle: throttle.c delayms.h
+	$(CC) $(CFLAGS) throttle.c -o throttle
