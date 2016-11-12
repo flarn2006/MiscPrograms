@@ -10,7 +10,7 @@
 #include <string.h>
 #include <ao/ao.h>
 #define SAMPLE_RATE 44100
-#define NOTE_LENGTH 0.180
+#define NOTE_LENGTH 0.250
 
 double tofreq(char note);
 
