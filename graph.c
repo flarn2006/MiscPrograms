@@ -70,7 +70,7 @@ double scale(double value, double omin, double omax, double nmin, double nmax)
 	return x * (nmax - nmin) + nmin;
 }
 
-void plotPoint(WINDOW *win, const viewwin *view, double x, double y, char ch, int *scrY, int *scrX)
+void plotPoint(WINDOW *win, const viewwin *view, double x, double y, int ch, int *scrY, int *scrX)
 {
 	/* Displays a point on the screen at a location determined by graph coordinates.
 	   win       - ncurses window for drawing (can be NULL to only set scrY and scrX w/o drawing)
@@ -246,15 +246,15 @@ void drawAxes(WINDOW *win, const viewwin *view)
 	int i; for (i=0; i<=xm; i++) {
 		double plotx = view->xmin + xstep * i;
 		int tick = fabs(fmod(plotx, view->xscl)) < xstep;
-		mvwaddch(win, y0, i, tick ? '+':'-');
+		mvwaddch(win, y0, i, tick ? ACS_PLUS:ACS_HLINE);
 	}
 	for (i=0; i<=ym; i++) {
 		double ploty = view->ymin + ystep * i;
 		int tick = fabs(fmod(ploty, view->yscl)) < ystep;
-		mvwaddch(win, i, x0, tick ? '+':'|');
+		mvwaddch(win, i, x0, tick ? ACS_PLUS:ACS_VLINE);
 	}
 	
-	mvwaddch(win, y0, x0, '+');
+	mvwaddch(win, y0, x0, ACS_PLUS);
 }
 
 void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlopeChars)
@@ -369,10 +369,10 @@ void drawTrace(WINDOW *win, viewwin *view, yfunction yfunc, double x)
 	double y = yfunc(x);
 	int yp, xp;
 	attron(COLOR_PAIR(2));
-	plotPoint(win, view, x, y, '+', &yp, &xp);
-	mvwaddch(win, yp-1, xp, '|'); mvwaddch(win, yp+1, xp, '|');
-	mvwaddch(win, yp, xp-2, '-'); mvwaddch(win, yp, xp-1, '-');
-	mvwaddch(win, yp, xp+1, '-'); mvwaddch(win, yp, xp+2, '-');
+	plotPoint(win, view, x, y, ACS_PLUS, &yp, &xp);
+	mvwaddch(win, yp-1, xp, ACS_VLINE); mvwaddch(win, yp+1, xp, ACS_VLINE);
+	mvwaddch(win, yp, xp-2, ACS_HLINE); mvwaddch(win, yp, xp-1, ACS_HLINE);
+	mvwaddch(win, yp, xp+1, ACS_HLINE); mvwaddch(win, yp, xp+2, ACS_HLINE);
 	mvwprintw(win, 0, 0, "X: %.5lf", x);
 	mvwprintw(win, 1, 0, "Y: %.5lf", y);
 	attroff(COLOR_PAIR(2));
