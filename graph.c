@@ -330,10 +330,10 @@ void defaultKeyHandler(int key, khdata *data)
 	double xshift = 0, yshift = 0;
 	
 	switch (key) {
-		case KEY_UP:	yshift = 1; break;
-		case KEY_DOWN:	yshift = -1; break;
-		case KEY_LEFT:	xshift = -1; break;
-		case KEY_RIGHT:	xshift = 1; break;
+		case 'k': case KEY_UP:    yshift = 1; break;
+		case 'j': case KEY_DOWN:  yshift = -1; break;
+		case 'h': case KEY_LEFT:  xshift = -1; break;
+		case 'l': case KEY_RIGHT: xshift = 1; break;
 	}
 	
 	xshift *= (view->xmax - view->xmin) / 16;
