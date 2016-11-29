@@ -171,10 +171,10 @@ int editViewWindow(viewwin *view)
 	int exitloop = 0;
 	int ch; while (!exitloop) {
 		switch (ch = wgetch(fwin)) {
-			case '\n': case KEY_DOWN:
+			case 'j': case '\n': case KEY_DOWN:
 				form_driver(f, REQ_NEXT_FIELD);
 				break;
-			case KEY_UP:
+			case 'k': case KEY_UP:
 				form_driver(f, REQ_PREV_FIELD);
 				break;
 			case KEY_BACKSPACE:
