@@ -282,6 +282,16 @@ double performEval(double x)
 }
 #endif
 
+void zoomOut(viewwin *view, float factor)
+{
+	float centerX = (view->xmin + view->ymax) / 2;
+	float centerY = (view->ymin + view->ymax) / 2;
+	view->xmin = scale(factor, 1.0f, 0.0f, view->xmin, centerX);
+	view->xmax = scale(factor, 1.0f, 0.0f, view->xmax, centerX);
+	view->ymin = scale(factor, 1.0f, 0.0f, view->ymin, centerY);
+	view->ymax = scale(factor, 1.0f, 0.0f, view->ymax, centerY);
+}
+
 void traceKeyHandler(int key, khdata *data)
 {
 	/* Keyboard handling function for trace mode. */
@@ -326,20 +336,18 @@ void defaultKeyHandler(int key, khdata *data)
 		case KEY_RIGHT:	xshift = 1; break;
 	}
 	
-	xshift *= (view->xmax - view->xmin) / 8;
-	yshift *= (view->ymax - view->ymin) / 8;
+	xshift *= (view->xmax - view->xmin) / 16;
+	yshift *= (view->ymax - view->ymin) / 16;
 	
 	view->xmin += xshift; view->xmax += xshift;
 	view->ymin += yshift; view->ymax += yshift;
 
 	if (key == '-') {
-		view->xmin *= 1.5; view->xmax *= 1.5;
-		view->ymin *= 1.5; view->ymax *= 1.5;
+		zoomOut(view, 1.03f);
 	}
 
 	if (key == '=') {
-		view->xmin /= 1.5; view->xmax /= 1.5;
-		view->ymin /= 1.5; view->ymax /= 1.5;
+		zoomOut(view, 1.0f/1.03f); /* actually zooms in, because 1/factor */
 	}
 
 	if (key == 's') enableSlopeChars = !enableSlopeChars;
