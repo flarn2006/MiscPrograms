@@ -9,9 +9,10 @@ void printUsage(FILE *stream, const char *argv0);
 int main(int argc, char *argv[])
 {
 	int ms = 50;
+	int bytes = 1;
 	FILE *fp = stdin;
 
-	if (argc >= 4) {
+	if (argc >= 5) {
 		printUsage(stderr, argv[0]);
 		return 2;
 	}
@@ -24,9 +25,13 @@ int main(int argc, char *argv[])
 			ms = atoi(argv[1]);
 		}
 	}
+
+	if (argc >= 3) {
+		bytes = atoi(argv[2]);
+	}
 	
-	if (argc == 3) {
-		fp = fopen(argv[2], "r");
+	if (argc == 4) {
+		fp = fopen(argv[3], "r");
 		if (!fp) {
 			fprintf(stderr, "%s: error opening '%s': %s\n", argv[0], argv[2], strerror(errno));
 			return 1;
@@ -34,14 +39,16 @@ int main(int argc, char *argv[])
 	}
 
 	while (1) {
-		int ch = fgetc(fp);
-		if (feof(fp)) {
-			break;
-		} else {
-			putchar(ch);
-			fflush(stdout);
-			delayms(ms);
+		int i; for (i=0; i<bytes; ++i) {
+			int ch = fgetc(fp);
+			if (feof(fp)) {
+				break;
+			} else {
+				putchar(ch);
+			}
 		}
+		fflush(stdout);
+		delayms(ms);
 	}
 
 	if (fp != stdin) fclose(fp);
@@ -50,5 +57,5 @@ int main(int argc, char *argv[])
 
 void printUsage(FILE *stream, const char *argv0)
 {
-	fprintf(stream, "Usage: %s [milliseconds] [filename]\n", argv0);
+	fprintf(stream, "Usage: %s [milliseconds between steps] [bytes to output per step] [filename]\n", argv0);
 }
