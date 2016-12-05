@@ -37,15 +37,25 @@ int main(int argc, char *argv[])
 	}
 
 	int i; for (i=optind+1; i<argc; ++i) {
-		fprintf(fp, "%s", argv[i]);
+		if (fprintf(fp, "%s", argv[i]) < 0)
+			goto write_error;
 		if (i < argc-1)
-			fputc(' ', fp);
+			if (fputc(' ', fp) == EOF)
+				goto write_error;
 	}
 
 	if (newline)
-		fputc('\n', fp);
+		if (fputc('\n', fp) == EOF)
+			goto write_error;
 	
-	fclose(fp);
+	goto no_error;
+
+write_error:
+	perror(argv[optind]);
+
+no_error:
+	if (fclose(fp) == EOF)
+		perror(argv[optind]);
 	return 0;
 }
 
