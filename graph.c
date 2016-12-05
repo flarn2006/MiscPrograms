@@ -299,8 +299,8 @@ void traceKeyHandler(int key, khdata *data)
 	double step; getViewStep(stdscr, data->view, &step, NULL);
 
 	switch (key) {
-		case KEY_LEFT:  *data->trace -= 4.0*step; break;
-		case KEY_RIGHT: *data->trace += 4.0*step; break;
+		case 'h': case KEY_LEFT:  *data->trace -= step; break;
+		case 'l': case KEY_RIGHT: *data->trace += step; break;
 	}
 
 	if (*data->trace < data->view->xmin) *data->trace = data->view->xmin;
