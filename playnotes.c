@@ -81,7 +81,6 @@ int main(int argc, char *argv[])
 				if (capital) octave_mult *= 2.0f;
 				play_note(device, tofreq(ch) * octave_mult, duration);
 				if (capital) octave_mult *= 0.5f;
-				break; /*not needed, but good practice*/
 		}
 	}
 	
