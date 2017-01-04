@@ -1,7 +1,7 @@
 /* exclude.c - Print some args without certain values
  * Useful for shell wildcards.
  * Usage: exclude [args...] [- [blacklist...]]
- *   e.g. exclude ab cd ef gh ij - ef gh  ->  ab cd ij
+ *   e.g. exclude ab cd ef gh ij - cd gh  ->  ab ef ij
  * Example: Delete all files except for .jp(e)g files
  *   rm `exclude * - *.jpg *.jpeg`
  */
