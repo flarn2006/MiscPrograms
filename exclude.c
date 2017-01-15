@@ -3,7 +3,8 @@
  * Usage: exclude [args...] [- [blacklist...]]
  *   e.g. exclude ab cd ef gh ij - cd gh  ->  ab ef ij
  * Example: Delete all files except for .jp(e)g files
- *   rm `exclude * - *.jpg *.jpeg`
+ *   rm `exclude "*" - "*.jpg" "*.jpeg"`
+ * NOTE: quotes around wildcards are important in case filenames have spaces!
  */
 
 #include <stdio.h>
