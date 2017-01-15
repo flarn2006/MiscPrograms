@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength series stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -57,6 +57,8 @@ ruler: ruler.c
 	$(CC) $(CFLAGS) ruler.c -o ruler
 runlength: runlength.c
 	$(CC) $(CFLAGS) runlength.c -o runlength
+safegets: safegets.c
+	$(CC) $(CFLAGS) safegets.c -o safegets
 series: series.c
 	$(CC) $(CFLAGS) series.c -o series
 stats: stats.c
