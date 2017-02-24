@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 	if (argc < 5) {
 		fprintf(stderr, "Usage: %s filename offset type data\n", argv[0]);
 		fprintf(stderr, " - type can be: bytes | string\n");
+		fprintf(stderr, "ex: %s /proc/1234/mem 8f000014 bytes 01 ff 02\n", argv[0]);
 		return 2;
 	}
 
