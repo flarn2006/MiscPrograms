@@ -3,9 +3,7 @@
 #include <time.h>
 #include "delayms.h"
 
-#define DELAY 30
-
-void dropchar(char ch, int column, int color, int *heights)
+void dropchar(char ch, int column, int color, int *heights, int delay)
 {
 	int lowest = heights[column];
 	int y; for (y=0; y<lowest; y++) {
@@ -13,7 +11,7 @@ void dropchar(char ch, int column, int color, int *heights)
 		attron(COLOR_PAIR(color));
 		mvaddch(y, column, ch);
 		attroff(COLOR_PAIR(color));
-		delayms(DELAY);
+		delayms(delay);
 		refresh();
 	}
 
@@ -24,6 +22,10 @@ int main(int argc, char *argv[])
 {
 	int ymax, xmax;
 	int *heights;
+
+	int delay = 30;
+	if (argc >= 2)
+		delay = atoi(argv[1]);
 
 	initscr();
 	cbreak();
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
 		int color = rand() % 7 + 1;
 		
 		if (rand() & 1) attron(A_BOLD);
-		dropchar(ch, x, color, heights);
+		dropchar(ch, x, color, heights, delay);
 		attroff(A_BOLD); /*if it wasn't set to begin with nothing will happen*/
 	}
 
