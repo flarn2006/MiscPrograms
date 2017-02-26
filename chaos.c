@@ -96,8 +96,8 @@ int main(int argc, char *argv[])
 	}
 
 	attron(A_BOLD);
-	mvprintw(0, 0, "Use the W/A/D keys to select a vertex.\n");
-	printw("Or press Space to choose one at random (try holding it down!)");
+	mvprintw(0, 0, "Use the W/A/D keys to select a vertex, or Space to choose one randomly.\n");
+	printw("Press Enter to select randomly several times. (Or hold down Space, or Enter.)");
 	attroff(A_BOLD);
 
 	cursor = vertices[0];
