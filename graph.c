@@ -94,8 +94,8 @@ char slopeChar(double slope)
 	/* Gets the character to display at a point in the graph with a given slope. */
 	
 	double a = fabs(slope);
-	if (a < 0.5)        return '=';
-	else if (a < 1.5)   return slope>0 ? '/' : '\\';
+	if (a < 1.5)        return '=';
+	else if (a < 5.0)   return slope>0 ? '/' : '\\';
 	else                return '|';
 }
 
@@ -270,8 +270,13 @@ void drawGraph(WINDOW *win, const viewwin *view, yfunction yfunc, int enableSlop
 	double x; for (x = view->xmin; x <= view->xmax; x += step)
 	{
 		double y = yfunc(x);
-		double d = estimateSlope(yfunc, x, step/2);
-		plotPoint(win, view, x, y, enableSlopeChars ? slopeChar(d):'#', NULL, NULL);
+		char ch = '#';
+		if (enableSlopeChars) {
+			double deriv = estimateSlope(yfunc, x, step/2);
+			double view_ratio = (view->ymax - view->ymin) / (view->xmax - view->xmin);
+			ch = slopeChar(deriv / view_ratio);
+		}
+		plotPoint(win, view, x, y, ch, NULL, NULL);
 	}
 }
 
