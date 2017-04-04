@@ -9,6 +9,7 @@
 #include <math.h>
 #include <string.h>
 #include <ao/ao.h>
+#include <errno.h>
 #define SAMPLE_RATE 44100
 #define NOTE_LENGTH 0.250
 
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
 	
 	device = ao_open_live(ao_default_driver_id(), &fmt, NULL);
 	if (!device) {
-		printf("Error %d opening audio device!\n", errno);
+		fprintf(stderr, "%s: cannot open audio device: %s\n", argv[0], strerror(errno));
 		return 2;
 	}
 	
