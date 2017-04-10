@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	std::size_t guessBeforeBest = 0;
 	unsigned int bestDifference = 0;
 	for (std::size_t i = 0; i < count - 1; i++) {
-		unsigned int diff = static_cast<unsigned int>(otherGuesses[i+1] - otherGuesses[i]);
+		unsigned int diff = otherGuesses[i+1] - otherGuesses[i];
 		if (diff > bestDifference) {
 			guessBeforeBest = i;
 			bestDifference = diff;
