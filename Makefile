@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho fpoke graph hdraw life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho fpoke graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -33,6 +33,8 @@ graph: graph.c
 	$(CC) $(CFLAGS) graph.c -lform -lncurses -lmatheval -lm -o graph
 hdraw: hdraw.c
 	$(CC) $(CFLAGS) hdraw.c -o hdraw
+hex: hex.c
+	$(CC) $(CFLAGS) hex.c -o hex
 life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
 money: money.c
