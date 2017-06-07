@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 	
-	int i; for (i=0; i<strlen(argv[1]); i++)
+	size_t length = strlen(argv[1]);
+	int i; for (i=0; i<length; i++)
 	{
 		char ch = argv[1][i];
 		char capital;
