@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho fpoke graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -27,8 +27,6 @@ exclude: exclude.c
 	$(CC) $(CFLAGS) exclude.c -o exclude
 fecho: fecho.c
 	$(CC) $(CFLAGS) fecho.c -o fecho
-fpoke: fpoke.c
-	$(CC) $(CFLAGS) fpoke.c -o fpoke
 graph: graph.c
 	$(CC) $(CFLAGS) graph.c -lform -lncurses -lmatheval -lm -o graph
 hdraw: hdraw.c
