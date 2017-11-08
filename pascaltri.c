@@ -7,7 +7,7 @@ int getValue(int *ar, size_t count, size_t pos);
 int main(int argc, char *argv[])
 {
 	/* Process arguments */
-	int rows = 10;
+	int rows = 13;
 	int width = 4;
 	if (argc > 1) {
 		rows = atoi(argv[1]);
