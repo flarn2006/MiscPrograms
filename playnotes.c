@@ -23,7 +23,7 @@ void play_note(ao_device *device, double freq, double duration)
 	
 	for (i=0; i<length; i++)
 	{
-		double value = sin(i * 2 * M_PI * (freq / (double)SAMPLE_RATE));
+		double value = sin(i * 2 * M_PI * (freq / SAMPLE_RATE));
 		audio[i] = (int16_t)(value * (length - i) / length * 0x7FFF);
 	}
 	
