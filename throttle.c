@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	if (argc == 4) {
 		fp = fopen(argv[3], "r");
 		if (!fp) {
-			fprintf(stderr, "%s: error opening '%s': %s\n", argv[0], argv[2], strerror(errno));
+			fprintf(stderr, "%s: error opening '%s': %s\n", argv[0], argv[3], strerror(errno));
 			return 1;
 		}
 	}
