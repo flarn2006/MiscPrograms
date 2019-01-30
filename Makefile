@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi crop exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -23,6 +23,8 @@ consine: consine.c
 	$(CC) $(CFLAGS) consine.c -lncurses -lm -o consine
 countpi: countpi.c
 	$(CC) $(CFLAGS) countpi.c -o countpi
+crop: crop.c
+	$(CC) $(CFLAGS) crop.c -o crop
 exclude: exclude.c
 	$(CC) $(CFLAGS) exclude.c -o exclude
 fecho: fecho.c
