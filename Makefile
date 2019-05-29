@@ -69,3 +69,5 @@ stats: stats.c
 	$(CC) $(CFLAGS) stats.c -lm -o stats
 throttle: throttle.c delayms.h
 	$(CC) $(CFLAGS) throttle.c -o throttle
+unhdraw: unhdraw.c
+	$(CC) $(CFLAGS) unhdraw.c -o unhdraw
