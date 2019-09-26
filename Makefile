@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi crop exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi crop exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series spellnum stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -65,6 +65,8 @@ safegets: safegets.c
 	$(CC) $(CFLAGS) safegets.c -o safegets
 series: series.c
 	$(CC) $(CFLAGS) series.c -o series
+spellnum: spellnum.c
+	$(CC) $(CFLAGS) -DSPELLNUM_STANDALONE spellnum.c -o spellnum
 stats: stats.c
 	$(CC) $(CFLAGS) stats.c -lm -o stats
 throttle: throttle.c delayms.h
