@@ -8,6 +8,7 @@ countpi
 crop
 exclude
 fecho
+graph
 hdraw
 hex
 life
@@ -25,6 +26,7 @@ ruler
 runlength
 safegets
 series
+spellnum
 stats
 throttle
 unhdraw
