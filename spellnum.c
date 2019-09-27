@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-typedef long long int number;
+#include "spellnum.h"
 
 #ifdef __SIZEOF_LONG_LONG__
 #define SIZEOF_NUMBER __SIZEOF_LONG_LONG__

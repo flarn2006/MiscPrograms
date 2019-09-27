@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include "spellnum.h"
 
 void printAmount(long value)
 {
@@ -66,7 +67,12 @@ int main(int argc, char *argv[])
 
 	printf("\n");
 	printAmount(original);
-	printf(" is equal to:\n\n");
+	
+	const char *dollars_str = spellnum_alloc(original / 100);
+	const char *cents_str = spellnum_alloc(original % 100);
+	printf(" (%s dollar%s and %s cent%s) is equal to:\n\n", dollars_str, (original / 100 == 1) ? "" : "s", cents_str, (original % 100 == 1) ? "" : "s");
+	spellnum_free(dollars_str);
+	spellnum_free(cents_str);
 
 	printUnit(bills100, "$100 bills", 10000L);
 	printUnit(bills50,  "$50 bills ", 5000L);
@@ -78,8 +84,6 @@ int main(int argc, char *argv[])
 	printUnit(dimes,    "dimes     ", 10L);
 	printUnit(nickels,  "nickels   ", 5L);
 	printUnit(pennies,  "pennies   ", 1L);
-	
-	printf("\n");
 
 	return 0;
 }

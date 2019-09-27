@@ -37,8 +37,8 @@ hex: hex.c
 	$(CC) $(CFLAGS) hex.c -o hex
 life: life.c
 	$(CC) $(CFLAGS) life.c -lncurses -o life
-money: money.c
-	$(CC) $(CFLAGS) money.c -lm -o money
+money: money.c spellnum.h spellnum.c
+	$(CC) $(CFLAGS) money.c spellnum.c -lm -o money
 movers: movers.c delayms.h
 	$(CC) $(CFLAGS) movers.c -lncurses -o movers
 myatoi: myatoi.c
@@ -65,7 +65,7 @@ safegets: safegets.c
 	$(CC) $(CFLAGS) safegets.c -o safegets
 series: series.c
 	$(CC) $(CFLAGS) series.c -o series
-spellnum: spellnum.c
+spellnum: spellnum.c spellnum.h
 	$(CC) $(CFLAGS) -DSPELLNUM_STANDALONE spellnum.c -o spellnum
 stats: stats.c
 	$(CC) $(CFLAGS) stats.c -lm -o stats
