@@ -24,14 +24,14 @@
 
 #define MAX_GROUPS ((MAX_DIGITS + 2) / 3)
 
-const char *zero = "zero";
-const char *ones[] = {
+static const char *zero = "zero";
+static const char *ones[] = {
 	"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 	"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
 };
-const char *tens[] = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+static const char *tens[] = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
 
-const char *suffixes[] = {
+static const char *suffixes[] = {
 #if MAX_DIGITS > 3
 	"thousand"
 #if MAX_DIGITS > 6
