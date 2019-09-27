@@ -159,9 +159,11 @@ size_t spellnum_len(number n)
 		int i; for (i=0; n>0; ++i) {
 			number group = n % 1000;
 			n /= 1000;
-			result += len_999(group);
-			if (i > 0)
-				result += strlen(suffixes[i-1]) + 1;
+			if (group > 0) {
+				result += len_999(group);
+				if (i > 0)
+					result += strlen(suffixes[i-1]) + 1;
+			}
 		}
 
 		return result - 1;
@@ -185,12 +187,14 @@ char *spellnum(number n, char *ptr)
 			n /= 1000;
 		}
 		for (--i; i>=0; --i) {
-			ptr = str_999(groups[i], ptr);
-			if (i > 0) {
-				size_t len = strlen(suffixes[i-1]);
-				memcpy(ptr, suffixes[i-1], len);
-				ptr[len] = ' ';
-				ptr += len + 1;
+			if (groups[i] > 0) {
+				ptr = str_999(groups[i], ptr);
+				if (i > 0) {
+					size_t len = strlen(suffixes[i-1]);
+					memcpy(ptr, suffixes[i-1], len);
+					ptr[len] = ' ';
+					ptr += len + 1;
+				}
 			}
 		}
 
