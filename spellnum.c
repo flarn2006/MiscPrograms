@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 
 	number n = (number)atoll(argv[1]);
 	const char *str = spellnum_alloc(n);
-	printf("%lld is %s.\n", n, str);
+	printf("%s\n", str);
 	spellnum_free(str);
 	return 0;
 }
