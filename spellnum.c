@@ -150,10 +150,12 @@ size_t spellnum_len(number n)
 	} else {
 		size_t result;
 
-		if (n < 0)
+		if (n < 0) {
 			result = 9; /* "negative " */
-		else
+			n = -n;
+		} else {
 			result = 0;
+		}
 
 		int i; for (i=0; n>0; ++i) {
 			number group = n % 1000;
@@ -176,6 +178,7 @@ char *spellnum(number n, char *ptr)
 		if (n < 0) {
 			strcpy(ptr, "negative ");
 			ptr += 9;
+			n = -n;
 		}
 		number groups[MAX_GROUPS];
 		int i; for (i=0; n>0; ++i) {
