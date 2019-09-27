@@ -23,6 +23,8 @@ typedef long long int number;
 #define MAX_DIGITS 3
 #endif
 
+#define MAX_GROUPS ((MAX_DIGITS + 2) / 3)
+
 const char *zero = "zero";
 const char *ones[] = {
 	"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
@@ -136,9 +138,84 @@ static char *str_999(number n, char *ptr)
 		const char *str = ones[n/100-1];
 		size_t len = strlen(str);
 		memcpy(ptr, str, len);
-		strcpy(ptr + len, " hundred ");
+		memcpy(ptr + len, " hundred ", 9);
 		return str_99(n % 100, ptr+len+9);
 	}
+}
+
+size_t spellnum_len(number n)
+{
+	if (n == 0) {
+		return 4; /* "zero" */
+	} else {
+		size_t result;
+
+		if (n < 0)
+			result = 9; /* "negative " */
+		else
+			result = 0;
+
+		int i; for (i=0; n>0; ++i) {
+			number group = n % 1000;
+			n /= 1000;
+			result += len_999(group);
+			if (i > 0)
+				result += strlen(suffixes[i-1]) + 1;
+		}
+
+		return result - 1;
+	}
+}
+
+char *spellnum(number n, char *ptr)
+{
+	if (n == 0) {
+		strcpy(ptr, zero);
+		return ptr + 4;
+	} else {
+		if (n < 0) {
+			strcpy(ptr, "negative ");
+			ptr += 9;
+		}
+		number groups[MAX_GROUPS];
+		int i; for (i=0; n>0; ++i) {
+			groups[i] = n % 1000;
+			n /= 1000;
+		}
+		for (--i; i>=0; --i) {
+			ptr = str_999(groups[i], ptr);
+			if (i > 0) {
+				size_t len = strlen(suffixes[i-1]);
+				memcpy(ptr, suffixes[i-1], len);
+				ptr[len] = ' ';
+				ptr += len + 1;
+			}
+		}
+
+		*(--ptr) = '\0';
+		return ptr;
+	}
+}
+
+const char *spellnum_alloc(number n)
+{
+	if (n == 0) {
+		return zero;
+	} else {
+		size_t len = spellnum_len(n);
+		char *ptr = malloc(len + 1);
+		if (ptr) {
+			spellnum(n, ptr);
+			assert(strlen(ptr) == len);
+		}
+		return ptr;
+	}
+}
+
+void spellnum_free(const char *ptr)
+{
+	if (ptr != zero)
+		free((char*)ptr);
 }
 
 #ifdef SPELLNUM_STANDALONE
@@ -151,11 +228,9 @@ int main(int argc, char *argv[])
 	}
 
 	number n = (number)atoll(argv[1]);
-	char *buf = malloc(len_999(n));
-	char *end = str_999(n, buf);
-	*(end-1) = '\0';
-	printf("%s\n", buf);
-	free(buf);
+	const char *str = spellnum_alloc(n);
+	printf("%lld is %s.\n", n, str);
+	spellnum_free(str);
 	return 0;
 }
 
