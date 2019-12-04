@@ -1,7 +1,7 @@
 CC="gcc"
 CPP="g++"
 CFLAGS=-O3
-TARGETS=addletters bestguess bounce chaos charsnow consine countpi crop exclude fecho graph hdraw hex life money movers myatoi particles pascaltri polyline rainbow roman rule90 ruler runlength safegets series spellnum stats throttle
+TARGETS=addletters bestguess bounce chaos charsnow consine countpi crop exclude fecho graph hdraw hex life money movers myatoi particles pascaltri printargs polyline rainbow roman rule90 ruler runlength safegets series spellnum stats throttle
 TARGETS_LIBAO=playnotes
 
 all: $(TARGETS) $(TARGETS_LIBAO)
@@ -49,6 +49,8 @@ pascaltri: pascaltri.c
 	$(CC) $(CFLAGS) pascaltri.c -o pascaltri
 playnotes: playnotes.c
 	$(CC) $(CFLAGS) playnotes.c -lao -lm -o playnotes
+printargs: printargs.c
+	$(CC) $(CFLAGS) printargs.c -o printargs
 polyline: polyline.c
 	$(CC) $(CFLAGS) polyline.c -o polyline
 rainbow: rainbow.c
