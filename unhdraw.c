@@ -32,11 +32,18 @@ int main(int argc, char *argv[])
 		return 254;
 	}
 
-	while (!feof(fp)) {
-		/* TODO: add error handling */
+	for (;;) {
 		int byte;
-		fscanf(fp, "%2x", &byte);
-		putchar(byte);
+		int scanf_result = fscanf(fp, "%2x", &byte);
+		if (scanf_result == EOF) {
+			if (ferror(fp))
+				perror(filename);
+			break;
+		} else if (scanf_result == 0) {
+			fgetc(fp);
+		} else {
+			putchar(byte);
+		}
 	}
 
 	if (fp && fp != stdin) {
