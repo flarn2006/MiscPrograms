@@ -32,22 +32,22 @@ int main(int argc, char *argv[])
 		return 254;
 	}
 
-	for (;;) {
-		int byte;
-		int scanf_result = fscanf(fp, "%2x", &byte);
-		if (scanf_result == EOF) {
-			if (ferror(fp))
-				perror(filename);
-			break;
-		} else if (scanf_result == 0) {
-			fgetc(fp);
-		} else {
-			putchar(byte);
+	if (fp) {
+		for (;;) {
+			int byte;
+			int scanf_result = fscanf(fp, "%2x", &byte);
+			if (scanf_result == EOF) {
+				if (ferror(fp))
+					perror(filename);
+				break;
+			} else if (scanf_result == 0) {
+				fgetc(fp);
+			} else {
+				putchar(byte);
+			}
 		}
-	}
-
-	if (fp && fp != stdin) {
-		fclose(fp);
+		if (fp != stdin)
+			fclose(fp);
 	}
 
 	return 0;
