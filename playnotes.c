@@ -8,36 +8,34 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
-#include <ao/ao.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/kd.h>
 #define SAMPLE_RATE 44100
 #define NOTE_LENGTH 0.250
+#define CLOCK_RATE 1190000
 
 double tofreq(char note);
 
-void play_note(ao_device *device, double freq, double duration)
+void play_note(int console_fd, double freq, double duration)
 {
-	unsigned long i;
-	size_t length = SAMPLE_RATE * duration;
-	int16_t *audio = malloc(length*2);
-	
-	for (i=0; i<length; i++)
-	{
-		double value = sin(i * 2 * M_PI * (freq / SAMPLE_RATE));
-		audio[i] = (int16_t)(value * (length - i) / length * 0x7FFF);
-	}
-	
-	ao_play(device, (char*)audio, length*2);
-	
-	free(audio);
+	unsigned long msec = (unsigned long)(1000.0 * duration);
+	unsigned long arg = (unsigned long)(CLOCK_RATE / freq) | (msec << 16);
+	ioctl(console_fd, KDMKTONE, arg);
+	usleep(1000 * msec);
 }
 
 int main(int argc, char *argv[])
 {
-	ao_device *device;
-	ao_sample_format fmt;
 	double duration = NOTE_LENGTH;
 	float octave_mult = 1.0f;
+	int console_fd = open("/dev/console", O_RDWR);
+	if (console_fd == -1) {
+		perror("/dev/console");
+		return 1;
+	}
 
 	if (argc == 2);  /* do nothing */
 	else if (argc == 3)
@@ -55,20 +53,6 @@ int main(int argc, char *argv[])
 		return 3;
 	}
 	
-	fmt.bits = 16;
-	fmt.rate = SAMPLE_RATE;
-	fmt.channels = 1;
-	fmt.byte_format = AO_FMT_NATIVE;
-	fmt.matrix = NULL;
-	
-	ao_initialize();
-	
-	device = ao_open_live(ao_default_driver_id(), &fmt, NULL);
-	if (!device) {
-		fprintf(stderr, "%s: cannot open audio device: %s\n", argv[0], strerror(errno));
-		return 2;
-	}
-	
 	size_t length = strlen(argv[1]);
 	int i; for (i=0; i<length; i++)
 	{
@@ -81,13 +65,10 @@ int main(int argc, char *argv[])
 			default:
 				capital = ('A' <= ch && ch <= 'G');
 				if (capital) octave_mult *= 2.0f;
-				play_note(device, tofreq(ch) * octave_mult, duration);
+				play_note(console_fd, tofreq(ch) * octave_mult, duration);
 				if (capital) octave_mult *= 0.5f;
 		}
 	}
-	
-	ao_close(device);
-	ao_shutdown();
 	
 	return 0;
 }
